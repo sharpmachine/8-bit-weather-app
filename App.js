@@ -4,19 +4,31 @@ import { StyleSheet, Text, View, TextInput } from 'react-native';
 export default class App extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { 
-      text: ''
-    }
+    this.state = {
+      text: '',
+      fontLoaded: false
+    };
   }
+
+  async componentDidMount() {
+    await Expo.Font.loadAsync({
+      'mister-pixel': require('./assets/fonts/misterPixelRegular.otf')
+    });
+
+    this.setState({ fontLoaded: true});
+  }
+
 
   render() {
     return (
       <View style={styles.container}>
-        <TextInput
-          style={styles.searchInput}
-          placeholder="search for a city"
-          onChangeText={text => this.setState({ text })}
-        />
+        {this.state.fontLoaded ? (
+          <TextInput
+            style={styles.searchInput}
+            placeholder="search for a city"
+            onChangeText={text => this.setState({ text })}
+          />
+        ) : null}
       </View>
     );
   }
