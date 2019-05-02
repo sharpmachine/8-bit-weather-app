@@ -1,5 +1,11 @@
 import React from 'react';
-import { StyleSheet, Text, View, TextInput } from 'react-native';
+import {
+  StyleSheet,
+  Text,
+  View,
+  TextInput,
+  TouchableOpacity
+} from "react-native";
 import { Font } from "expo";
 
 export default class App extends React.Component {
@@ -19,6 +25,9 @@ export default class App extends React.Component {
     this.setState({ fontLoaded: true});
   }
 
+  onPress = () => {
+    console.log('pressed')
+  }
 
   render() {
     return (
@@ -29,6 +38,14 @@ export default class App extends React.Component {
             placeholder="search for a city"
             onChangeText={text => this.setState({ text })}
           />
+        ) : null}
+
+        {this.state.fontLoaded ? (
+          <TouchableOpacity onPress={this.onPress}>
+            <View style={styles.button}>
+              <Text style={styles.buttonLabel}>Start</Text>
+            </View>
+          </TouchableOpacity>
         ) : null}
       </View>
     );
@@ -51,4 +68,14 @@ const styles = StyleSheet.create({
     textAlign: "center",
     fontFamily: "mister-pixel"
   },
+  button: {
+    height: 60,
+    width: 200,
+    alignItems: "center",
+    padding: 14
+  },
+  buttonLabel: {
+    fontFamily: "mister-pixel",
+    fontSize: 24
+  }
 });
