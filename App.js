@@ -13,7 +13,9 @@ export default class App extends React.Component {
     super(props);
     this.state = {
       text: '',
-      fontLoaded: false
+      fontLoaded: false,
+      lat: null,
+      lng: null
     };
   }
 
@@ -26,7 +28,31 @@ export default class App extends React.Component {
   }
 
   onPress = () => {
-    console.log('pressed')
+    // get coords
+    this.getCoords().then(() =>{
+      console.log('gotem');
+    });
+    
+    // show loading
+    // navigate to weather info
+  }
+
+  getCoords() {
+    const apiKey = 'bba00951986840b0838be4158db370b8';
+
+    return fetch(
+      `https://api.opencagedata.com/geocode/v1/json?key=${apiKey}&q=${this.state.text}`
+    )
+      .then(response => response.json())
+      .then(responseJson => {
+        this.setState({
+          lat: responseJson.results[0].geometry.lat,
+          lng: responseJson.results[0].geometry.lng
+        });
+      })
+      .catch(error => {
+        console.error(error);
+      });
   }
 
   render() {
@@ -47,6 +73,13 @@ export default class App extends React.Component {
             </View>
           </TouchableOpacity>
         ) : null}
+
+        <Text>
+          Coords{"\n"}
+          lat: {this.state.lat ? this.state.lat : "0"}
+          {"\n"}
+          lng: {this.state.lng ? this.state.lng : "0"}
+        </Text>
       </View>
     );
   }
