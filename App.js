@@ -12,7 +12,7 @@ export default class App extends React.Component {
   }
 
   async componentDidMount() {
-    await Expo.Font.loadAsync({
+    await Font.loadAsync({
       'mister-pixel': require('./assets/fonts/misterPixelRegular.otf')
     });
 
