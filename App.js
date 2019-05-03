@@ -46,7 +46,10 @@ export class HomeScreen extends React.Component {
         this.getWeather(this.state.lat, this.state.lng)
         .then(() => {
           // navigate to weather info screen
-          this.props.navigation.navigate("Weather", { weatherData: this.state.weatherData });
+          this.props.navigation.navigate("Weather", { 
+            weatherData: this.state.weatherData,
+            query: this.state.text
+           });
         });
       });
   }
@@ -121,9 +124,11 @@ export class WeatherScreen extends React.Component {
   render() {
     const { navigation } = this.props;
     const weatherData = navigation.getParam('weatherData', {});
+    const city = navigation.getParam('query', 'Seattle WA')
 
     return (
       <Text>
+        City: {JSON.stringify(city)} {"\n"}
         Current Temp: {JSON.stringify(weatherData)}
       </Text>
     );
