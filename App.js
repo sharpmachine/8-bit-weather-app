@@ -4,7 +4,8 @@ import {
   Text,
   View,
   TextInput,
-  TouchableOpacity
+  TouchableOpacity,
+  Alert
 } from "react-native";
 import { Font } from "expo";
 
@@ -31,6 +32,12 @@ export default class App extends React.Component {
     // get coords
     this.getCoords().then(() =>{
       console.log('gotem');
+      Alert.alert(`
+        Coords
+          \n
+          lat: ${this.state.lat}
+          lng: ${this.state.lng}
+      `)
     });
     
     // show loading
@@ -74,12 +81,12 @@ export default class App extends React.Component {
           </TouchableOpacity>
         ) : null}
 
-        <Text>
+        {/* <Text>
           Coords{"\n"}
           lat: {this.state.lat ? this.state.lat : "0"}
           {"\n"}
           lng: {this.state.lng ? this.state.lng : "0"}
-        </Text>
+        </Text> */}
       </View>
     );
   }
