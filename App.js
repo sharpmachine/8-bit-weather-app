@@ -17,6 +17,7 @@ export class HomeScreen extends React.Component {
       fontLoaded: false,
       lat: null,
       lng: null,
+      city: null,
       isFetchingData: false,
       weatherData: null
     };
@@ -48,7 +49,7 @@ export class HomeScreen extends React.Component {
           // navigate to weather info screen
           this.props.navigation.navigate("Weather", { 
             weatherData: this.state.weatherData,
-            query: this.state.text
+            city: this.state.city
            });
         });
       });
@@ -64,7 +65,8 @@ export class HomeScreen extends React.Component {
       .then(responseJson => {
         this.setState({
           lat: responseJson.results[0].geometry.lat,
-          lng: responseJson.results[0].geometry.lng
+          lng: responseJson.results[0].geometry.lng,
+          city: responseJson.results[0].components.city
         });
       })
       .catch(error => {
@@ -124,7 +126,7 @@ export class WeatherScreen extends React.Component {
   render() {
     const { navigation } = this.props;
     const weatherData = navigation.getParam('weatherData', {});
-    const city = navigation.getParam('query', 'Seattle WA')
+    const city = navigation.getParam('city', 'Seattle WA')
 
     return (
       <Text>
