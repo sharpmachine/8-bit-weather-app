@@ -44,12 +44,6 @@ export default class App extends React.Component {
 
         // Pass coords to dark sky API to fetch weather for queried city
         this.getWeather(this.state.lat, this.state.lng);
-      //   Alert.alert(`
-      //   Coords
-      //     \n
-      //     lat: ${this.state.lat}
-      //     lng: ${this.state.lng}
-      // `);
       })
 
       // navigate to weather info screen
@@ -85,7 +79,6 @@ export default class App extends React.Component {
       this.setState({
         weatherData: responseJson
       })
-      // console.log(responseJson.currently.temperature);
     }) ;
   }
 
