@@ -16,32 +16,42 @@ export default class App extends React.Component {
       text: '',
       fontLoaded: false,
       lat: null,
-      lng: null
+      lng: null,
+      isFetchingData: false
     };
   }
 
+  // TODO: Preload font somehow
   async componentDidMount() {
     await Font.loadAsync({
       'mister-pixel': require('./assets/fonts/misterPixelRegular.otf')
     });
 
     this.setState({ fontLoaded: true});
+
+    // TODO: For testing – remove when not neeed anymore
+    this.setState({ text: 'Seattle, Wa' })
   }
 
   onPress = () => {
+    // set state when data is being fetched from APIs
+    this.setState({ isFetchingData: true });
+
     // get coords
-    this.getCoords().then(() =>{
-      console.log('gotem');
-      Alert.alert(`
+    this.getCoords()
+      .then(() => {
+
+        // TODO: Pass coords to dark sky API to fetch weather for queried city
+        Alert.alert(`
         Coords
           \n
           lat: ${this.state.lat}
           lng: ${this.state.lng}
-      `)
-    });
-    
-    // show loading
-    // navigate to weather info
+      `);
+      })
+
+      // navigate to weather info screen
+      .then(() => console.log("navigate to weather info"));
   }
 
   getCoords() {
@@ -65,15 +75,17 @@ export default class App extends React.Component {
   render() {
     return (
       <View style={styles.container}>
-        {this.state.fontLoaded ? (
+        {this.state.fontLoaded && !this.state.isFetchingData ? (
           <TextInput
             style={styles.searchInput}
             placeholder="search for a city"
+            value={this.state.text}
             onChangeText={text => this.setState({ text })}
           />
         ) : null}
 
-        {this.state.fontLoaded ? (
+        {/* TODO: Disable button if search field has no value */}
+        {this.state.fontLoaded && !this.state.isFetchingData ? (
           <TouchableOpacity onPress={this.onPress}>
             <View style={styles.button}>
               <Text style={styles.buttonLabel}>Start</Text>
@@ -81,12 +93,14 @@ export default class App extends React.Component {
           </TouchableOpacity>
         ) : null}
 
-        {/* <Text>
-          Coords{"\n"}
-          lat: {this.state.lat ? this.state.lat : "0"}
-          {"\n"}
-          lng: {this.state.lng ? this.state.lng : "0"}
-        </Text> */}
+        {this.state.fontLoaded && this.state.isFetchingData ? (
+          <View>
+            <Text style={styles.loadingState}>
+              Loading… {"\n"}
+              Do not turn off the power
+            </Text>
+          </View>
+        ) : null}
       </View>
     );
   }
@@ -117,5 +131,10 @@ const styles = StyleSheet.create({
   buttonLabel: {
     fontFamily: "mister-pixel",
     fontSize: 24
+  },
+  loadingState: {
+    fontFamily: "mister-pixel",
+    fontSize: 16,
+    textAlign: 'center'
   }
 });
