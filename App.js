@@ -4,19 +4,10 @@ import {
   Text,
   View,
   TextInput,
-  TouchableOpacity,
-  Alert
+  TouchableOpacity
 } from "react-native";
 import { Font } from "expo";
 import { createStackNavigator, createAppContainer } from "react-navigation";
-
-export class WeatherScreen extends React.Component {
-  render() {
-    return (
-      <Text>Weather Screen</Text>
-    )
-  }
-}
 
 export class HomeScreen extends React.Component {
   constructor(props) {
@@ -54,9 +45,8 @@ export class HomeScreen extends React.Component {
         // Pass coords to dark sky API to fetch weather for queried city
         this.getWeather(this.state.lat, this.state.lng)
         .then(() => {
-          console.log(this.state.weatherData);
           // navigate to weather info screen
-          this.props.navigation.navigate("Weather");
+          this.props.navigation.navigate("Weather", { weatherData: this.state.weatherData });
         });
       });
   }
@@ -123,6 +113,19 @@ export class HomeScreen extends React.Component {
           </View>
         ) : null}
       </View>
+    );
+  }
+}
+
+export class WeatherScreen extends React.Component {
+  render() {
+    const { navigation } = this.props;
+    const weatherData = navigation.getParam('weatherData', {});
+
+    return (
+      <Text>
+        Current Temp: {JSON.stringify(weatherData)}
+      </Text>
     );
   }
 }
