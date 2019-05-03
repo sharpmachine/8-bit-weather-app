@@ -17,7 +17,8 @@ export default class App extends React.Component {
       fontLoaded: false,
       lat: null,
       lng: null,
-      isFetchingData: false
+      isFetchingData: false,
+      weatherData: null
     };
   }
 
@@ -41,13 +42,14 @@ export default class App extends React.Component {
     this.getCoords()
       .then(() => {
 
-        // TODO: Pass coords to dark sky API to fetch weather for queried city
-        Alert.alert(`
-        Coords
-          \n
-          lat: ${this.state.lat}
-          lng: ${this.state.lng}
-      `);
+        // Pass coords to dark sky API to fetch weather for queried city
+        this.getWeather(this.state.lat, this.state.lng);
+      //   Alert.alert(`
+      //   Coords
+      //     \n
+      //     lat: ${this.state.lat}
+      //     lng: ${this.state.lng}
+      // `);
       })
 
       // navigate to weather info screen
@@ -70,6 +72,21 @@ export default class App extends React.Component {
       .catch(error => {
         console.error(error);
       });
+  }
+
+  getWeather(lat, lng) {
+    const apiKey = '3bd0a54365796fc1a01468fc9834a2b3';
+
+    return fetch(
+      `https://api.darksky.net/forecast/${apiKey}/${lat},${lng}`
+    )
+    .then(response => response.json())
+    .then(responseJson => {
+      this.setState({
+        weatherData: responseJson
+      })
+      // console.log(responseJson.currently.temperature);
+    }) ;
   }
 
   render() {
