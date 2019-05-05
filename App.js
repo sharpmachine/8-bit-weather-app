@@ -11,6 +11,7 @@ import {
 import { Font } from "expo";
 import { createStackNavigator, createAppContainer } from "react-navigation";
 import LottieView from "lottie-react-native";
+import * as WeatherData from "./assets/mockData/weatherData"
 
 export class HomeScreen extends React.Component {
   constructor(props) {
@@ -29,7 +30,6 @@ export class HomeScreen extends React.Component {
 
   // TODO: Preload font somehow
   async componentDidMount() {
-    console.log('mounted')
     await Font.loadAsync({
       'mister-pixel': require('./assets/fonts/misterPixelRegular.otf')
     });
@@ -78,6 +78,7 @@ export class HomeScreen extends React.Component {
     )
       .then(response => response.json())
       .then(responseJson => {
+        console.log('coords API called');
         this.setState({
           lat: responseJson.results[0].geometry.lat,
           lng: responseJson.results[0].geometry.lng,
@@ -97,6 +98,7 @@ export class HomeScreen extends React.Component {
     )
     .then(response => response.json())
     .then(responseJson => {
+      console.log("weather API called");
       this.setState({
         weatherData: responseJson
       })
@@ -144,7 +146,7 @@ export class HomeScreen extends React.Component {
 export class WeatherScreen extends React.Component {
   render() {
     const { navigation } = this.props;
-    const weatherData = navigation.getParam('weatherData', {});
+    const weatherData = navigation.getParam('weatherData', WeatherData.WEATHER_DATA[0]);
     const city = navigation.getParam('city', 'Seattle WA')
 
     return (
@@ -190,8 +192,8 @@ const styles = StyleSheet.create({
 });
 
 const MainNavigator = createStackNavigator({
-  Home: { screen: HomeScreen },
   Weather: { screen: WeatherScreen },
+  Home: { screen: HomeScreen }
 });
 
 const AppContainer = createAppContainer(MainNavigator);
