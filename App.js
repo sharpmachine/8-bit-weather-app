@@ -4,27 +4,32 @@ import {
   Text,
   View,
   TextInput,
-  TouchableOpacity
+  TouchableOpacity,
+  Animated,
+  Easing
 } from "react-native";
 import { Font } from "expo";
 import { createStackNavigator, createAppContainer } from "react-navigation";
+import LottieView from "lottie-react-native";
 
 export class HomeScreen extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      text: '',
+      text: "",
       fontLoaded: false,
       lat: null,
       lng: null,
       city: null,
       isFetchingData: false,
-      weatherData: null
+      weatherData: null,
+      progress: new Animated.Value(1)
     };
   }
 
   // TODO: Preload font somehow
   async componentDidMount() {
+    console.log('mounted')
     await Font.loadAsync({
       'mister-pixel': require('./assets/fonts/misterPixelRegular.otf')
     });
@@ -33,6 +38,13 @@ export class HomeScreen extends React.Component {
 
     // TODO: For testing – remove when not neeed anymore
     this.setState({ text: 'Seattle, Wa' })
+
+    
+    Animated.timing(this.state.progress, {
+      toValue: 1,
+      duration: 5000,
+      easing: Easing.linear
+    }).start();
   }
 
   onPress = () => {
@@ -50,7 +62,10 @@ export class HomeScreen extends React.Component {
           this.props.navigation.navigate("Weather", { 
             weatherData: this.state.weatherData,
             city: this.state.city
-           });
+          })
+          // .then(() => {
+          //   this.setState({ isFetchingData: false });
+          // });
         });
       });
   }
@@ -111,6 +126,10 @@ export class HomeScreen extends React.Component {
 
         {this.state.fontLoaded && this.state.isFetchingData ? (
           <View>
+            <LottieView
+              source={require("./assets/icons/loading.json")}
+              progress={this.state.progress}
+            />
             <Text style={styles.loadingState}>
               Loading… {"\n"}
               Do not turn off the power
@@ -131,7 +150,7 @@ export class WeatherScreen extends React.Component {
     return (
       <Text>
         City: {JSON.stringify(city)} {"\n"}
-        Current Temp: {JSON.stringify(weatherData)}
+        Current Temp: {JSON.stringify(weatherData.currently.temperature)}
       </Text>
     );
   }
