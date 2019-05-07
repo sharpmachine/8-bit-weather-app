@@ -6,12 +6,15 @@ import {
   TextInput,
   TouchableOpacity,
   Animated,
+  Button,
   Easing
 } from "react-native";
 import { Font } from "expo";
 import { createStackNavigator, createAppContainer } from "react-navigation";
 import LottieView from "lottie-react-native";
-import * as WeatherData from "./assets/mockData/weatherData"
+import * as WeatherData from "./assets/mockData/weatherData";
+// import moment from "momentjs";
+import moment from "moment";
 
 export class HomeScreen extends React.Component {
   constructor(props) {
@@ -147,13 +150,29 @@ export class WeatherScreen extends React.Component {
   render() {
     const { navigation } = this.props;
     const weatherData = navigation.getParam('weatherData', WeatherData.WEATHER_DATA[0]);
-    const city = navigation.getParam('city', 'Seattle WA')
+    const city = navigation.getParam('city', 'Seattle WA');
+    const next24hours = weatherData.hourly.data.slice(0, 24);
 
     return (
-      <Text>
-        City: {JSON.stringify(city)} {"\n"}
-        Current Temp: {JSON.stringify(weatherData.currently.temperature)}
-      </Text>
+      <View>
+        <Text>
+          City: {JSON.stringify(city)} {"\n"}
+          Time: {moment(moment.unix(weatherData.currently.time)).format("h:mm a")}
+          {"\n"}
+          Current Temp:{" "}
+          {JSON.stringify(Math.round(weatherData.currently.temperature))}
+          {"\n"}
+          Summary: {JSON.stringify(weatherData.currently.summary)}
+        </Text>
+        {next24hours.map(data => {
+          return (
+            <Text key={data.time}>
+              Temp: {Math.round(data.temperature)} {"\n"}
+              Time: {moment(moment.unix(data.time)).format("ha")}
+            </Text>
+          );
+        })}
+      </View>
     );
   }
 }
