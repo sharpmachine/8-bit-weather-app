@@ -153,6 +153,7 @@ export class WeatherScreen extends React.Component {
     const weatherData = navigation.getParam('weatherData', WeatherData.WEATHER_DATA[0]);
     const city = navigation.getParam('city', 'Seattle WA');
     const next24hours = weatherData.hourly.data.slice(0, 24);
+    const next7days = weatherData.daily.data;
 
     return (
       <View>
@@ -213,6 +214,22 @@ export class WeatherScreen extends React.Component {
               moment.unix(weatherData.daily.data[0].sunsetTime)
             ).format("h:mm a")}
           </Text>
+        </View>
+        <View>
+          {next7days.map(data => {
+            return (
+              <Text key={data.time}>
+                Day: {moment(moment.unix(data.time)).format("dddd")}
+                {"\n"}
+                High: {Math.round(data.temperatureHigh)}
+                {"\n"}
+                Low: {Math.round(data.temperatureLow)}
+                {"\n"}
+                Icon: {data.icon}
+              </Text>
+            );
+          })}
+          
         </View>
       </View>
     );
