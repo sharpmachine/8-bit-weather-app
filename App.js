@@ -168,14 +168,20 @@ export class WeatherScreen extends React.Component {
           Summary: {JSON.stringify(weatherData.currently.summary)}
         </Text>
         <ScrollView horizontal={true}>
-          <View style={{ flex: 1, flexDirection: "row" }}>
+          <View
+            style={{
+              flex: 1,
+              flexDirection: "row",
+              justifyContent: "space-between"
+            }}
+          >
             {next24hours.map(data => {
               return (
                 <Text
                   key={data.time}
                   style={{
                     width: 40,
-                    height: 45,
+                    height: 39,
                     backgroundColor: "powderblue",
                     textAlign: "center"
                   }}
@@ -187,28 +193,70 @@ export class WeatherScreen extends React.Component {
             })}
           </View>
         </ScrollView>
-        <View>
-          <Text>
+        <View
+          style={{
+            flex: 1,
+            flexDirection: "row",
+            justifyContent: "space-between"
+          }}
+        >
+          <Text
+            style={{
+              width: 91,
+              height: 45,
+              textAlign: "center"
+            }}
+          >
             Wind {"\n"}
             {weatherData.currently.windSpeed}mph
           </Text>
-          <Text>
+          <Text
+            style={{
+              width: 91,
+              height: 39,
+              textAlign: "center"
+            }}
+          >
             Percipitation {"\n"}
             {weatherData.currently.precipProbability}%
           </Text>
-          <Text>
+          <Text
+            style={{
+              width: 91,
+              height: 39,
+              textAlign: "center"
+            }}
+          >
             Humidity {"\n"}
             {weatherData.currently.humidity}%
           </Text>
         </View>
-        <View>
-          <Text>
+        <View
+          style={{
+            flex: 1,
+            flexDirection: "row",
+            justifyContent: "space-between"
+          }}
+        >
+          <Text
+            style={{
+              width: 103,
+              height: 56,
+              textAlign: "center"
+            }}
+          >
             Sunrise {"\n"}
             {moment(
               moment.unix(weatherData.daily.data[0].sunriseTime)
             ).format("h:mm a")}
           </Text>
-          <Text>
+          <Text
+            style={{
+              width: 103,
+              height: 56,
+              textAlign: "center"
+            }}
+          >
             Sunset {"\n"}
             {moment(
               moment.unix(weatherData.daily.data[0].sunsetTime)
@@ -229,7 +277,6 @@ export class WeatherScreen extends React.Component {
               </Text>
             );
           })}
-          
         </View>
       </View>
     );
