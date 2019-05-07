@@ -7,7 +7,8 @@ import {
   TouchableOpacity,
   Animated,
   Button,
-  Easing
+  Easing,
+  ScrollView
 } from "react-native";
 import { Font } from "expo";
 import { createStackNavigator, createAppContainer } from "react-navigation";
@@ -157,21 +158,34 @@ export class WeatherScreen extends React.Component {
       <View>
         <Text>
           City: {JSON.stringify(city)} {"\n"}
-          Time: {moment(moment.unix(weatherData.currently.time)).format("h:mm a")}
+          Time:{" "}
+          {moment(moment.unix(weatherData.currently.time)).format("h:mm a")}
           {"\n"}
           Current Temp:{" "}
           {JSON.stringify(Math.round(weatherData.currently.temperature))}
           {"\n"}
           Summary: {JSON.stringify(weatherData.currently.summary)}
         </Text>
-        {next24hours.map(data => {
-          return (
-            <Text key={data.time}>
-              Temp: {Math.round(data.temperature)} {"\n"}
-              Time: {moment(moment.unix(data.time)).format("ha")}
-            </Text>
-          );
-        })}
+        <ScrollView horizontal={true}>
+          <View style={{ flex: 1, flexDirection: "row" }}>
+            {next24hours.map(data => {
+              return (
+                <Text
+                  key={data.time}
+                  style={{
+                    width: 40,
+                    height: 45,
+                    backgroundColor: "powderblue",
+                    textAlign: "center"
+                  }}
+                >
+                  {Math.round(data.temperature)} {"\n"}
+                  {moment(moment.unix(data.time)).format("ha")}
+                </Text>
+              );
+            })}
+          </View>
+        </ScrollView>
       </View>
     );
   }
