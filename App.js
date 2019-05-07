@@ -186,6 +186,34 @@ export class WeatherScreen extends React.Component {
             })}
           </View>
         </ScrollView>
+        <View>
+          <Text>
+            Wind {"\n"}
+            {weatherData.currently.windSpeed}mph
+          </Text>
+          <Text>
+            Percipitation {"\n"}
+            {weatherData.currently.precipProbability}%
+          </Text>
+          <Text>
+            Humidity {"\n"}
+            {weatherData.currently.humidity}%
+          </Text>
+        </View>
+        <View>
+          <Text>
+            Sunrise {"\n"}
+            {moment(
+              moment.unix(weatherData.daily.data[0].sunriseTime)
+            ).format("h:mm a")}
+          </Text>
+          <Text>
+            Sunset {"\n"}
+            {moment(
+              moment.unix(weatherData.daily.data[0].sunsetTime)
+            ).format("h:mm a")}
+          </Text>
+        </View>
       </View>
     );
   }
