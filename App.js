@@ -5,9 +5,11 @@ import {
   View,
   TextInput,
   TouchableOpacity,
-  ScrollView
+  ScrollView,
+  SafeAreaView,
+  StatusBar
 } from "react-native";
-import { Font, AppLoading } from "expo";
+import { Font, AppLoading, LinearGradient } from "expo";
 import { createStackNavigator, createAppContainer } from "react-navigation";
 import LottieView from "lottie-react-native";
 import * as WeatherData from "./assets/mockData/weatherData";
@@ -96,7 +98,7 @@ export class HomeScreen extends React.Component {
 
   render() {
     return (
-      <View style={styles.container}>
+      <View style={[styles.container, {flex: 1}]}>
         {!this.state.isFetchingData ? (
           <TextInput
             style={styles.searchInput}
@@ -135,133 +137,45 @@ export class WeatherScreen extends React.Component {
   render() {
     const { navigation } = this.props;
     const weatherData = navigation.getParam('weatherData', WeatherData.WEATHER_DATA[0]);
-    const city = navigation.getParam('city', 'Seattle WA');
+    const city = navigation.getParam('city', 'Seattle');
     const next24hours = weatherData.hourly.data.slice(0, 24);
     const next7days = weatherData.daily.data;
 
     return (
-      <View>
-        <MisterPixel>
-          City: {JSON.stringify(city)} {"\n"}
-          Time:{" "}
-          {moment(moment.unix(weatherData.currently.time)).format("h:mm a")}
-          {"\n"}
-          Current Temp:{" "}
-          {JSON.stringify(Math.round(weatherData.currently.temperature))}
-          {"\n"}
-          Summary: {JSON.stringify(weatherData.currently.summary)}
-        </MisterPixel>
-        {/* <ScrollView horizontal={true}>
-          <View
-            style={{
-              flex: 1,
-              flexDirection: "row",
-              justifyContent: "space-between"
-            }}
+      <View style={{ flex: 1 }}>
+        <StatusBar barStyle="light-content" />
+        <SafeAreaView style={{ flex: 0, backgroundColor: "#F09931" }} />
+        <SafeAreaView style={{ flex: 1, backgroundColor: "#F04A30" }}>
+          <LinearGradient
+            colors={["#F09931", "#F04A30"]}
+            style={{ flex: 1 }}
           >
-            {next24hours.map(data => {
-              return (
-                <Text
-                  key={data.time}
-                  style={{
-                    width: 40,
-                    height: 39,
-                    backgroundColor: "powderblue",
-                    textAlign: "center"
-                  }}
-                >
-                  {Math.round(data.temperature)} {"\n"}
-                  {moment(moment.unix(data.time)).format("ha")}
-                </Text>
-              );
-            })}
-          </View>
-        </ScrollView> */}
-        {/* <View
-          style={{
-            flex: 1,
-            flexDirection: "row",
-            justifyContent: "space-between"
-          }}
-        >
-          <Text
-            style={{
-              width: 91,
-              height: 45,
-              textAlign: "center"
-            }}
-          >
-            Wind {"\n"}
-            {weatherData.currently.windSpeed}mph
-          </Text>
-          <Text
-            style={{
-              width: 91,
-              height: 39,
-              textAlign: "center"
-            }}
-          >
-            Percipitation {"\n"}
-            {weatherData.currently.precipProbability}%
-          </Text>
-          <Text
-            style={{
-              width: 91,
-              height: 39,
-              textAlign: "center"
-            }}
-          >
-            Humidity {"\n"}
-            {weatherData.currently.humidity}%
-          </Text>
-        </View>
-        <View
-          style={{
-            flex: 1,
-            flexDirection: "row",
-            justifyContent: "space-between"
-          }}
-        >
-          <Text
-            style={{
-              width: 103,
-              height: 56,
-              textAlign: "center"
-            }}
-          >
-            Sunrise {"\n"}
-            {moment(
-              moment.unix(weatherData.daily.data[0].sunriseTime)
-            ).format("h:mm a")}
-          </Text>
-          <Text
-            style={{
-              width: 103,
-              height: 56,
-              textAlign: "center"
-            }}
-          >
-            Sunset {"\n"}
-            {moment(
-              moment.unix(weatherData.daily.data[0].sunsetTime)
-            ).format("h:mm a")}
-          </Text>
-        </View>
-        <View>
-          {next7days.map(data => {
-            return (
-              <Text key={data.time}>
-                Day: {moment(moment.unix(data.time)).format("dddd")}
-                {"\n"}
-                High: {Math.round(data.temperatureHigh)}
-                {"\n"}
-                Low: {Math.round(data.temperatureLow)}
-                {"\n"}
-                Icon: {data.icon}
-              </Text>
-            );
-          })}
-        </View> */}
+            <View style={styles.container}>
+              <MisterPixel
+                style={{ fontSize: 24, marginTop: 70, marginBottom: 7 }}
+              >
+                {city}
+              </MisterPixel>
+              <MisterPixel style={{ marginBottom: 187 }}>
+                {moment(moment.unix(weatherData.currently.time)).format(
+                  "MMMM D"
+                )}
+                , 1988
+              </MisterPixel>
+              <MisterPixel style={{ fontSize: 58, marginBottom: 7 }}>
+                {Math.round(weatherData.currently.temperature)}°
+              </MisterPixel>
+              <MisterPixel style={{ marginBottom: 7 }}>
+                {weatherData.currently.summary}
+              </MisterPixel>
+              <MisterPixel>
+                {moment(moment.unix(weatherData.currently.time)).format(
+                  "h:mm a"
+                )}
+              </MisterPixel>
+            </View>
+          </LinearGradient>
+        </SafeAreaView>
       </View>
     );
   }
@@ -269,17 +183,19 @@ export class WeatherScreen extends React.Component {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    backgroundColor: "#fff",
+    backgroundColor: "transparent",
     alignItems: "center",
     justifyContent: "center"
+  },
+  disabledBtn: {
+    opacity: 0.8
   },
   searchInput: {
     width: 368,
     height: 60,
     padding: 15,
     borderWidth: 3,
-    fontSize: 18,
+    fontSize: 16,
     textAlign: "center",
     fontFamily: "mister-pixel"
   },
@@ -291,23 +207,26 @@ const styles = StyleSheet.create({
   },
   buttonLabel: {
     fontFamily: "mister-pixel",
-    fontSize: 24
+    fontSize: 24,
+    color: "#000"
   },
   loadingState: {
     fontFamily: "mister-pixel",
-    fontSize: 16,
-    textAlign: 'center'
-  },
-  disabledBtn: {
-    opacity: 0.8
+    textAlign: "center",
+    color: "#000"
   }
 });
 
-const MainNavigator = createStackNavigator({
-  Home: { screen: HomeScreen },
-  Weather: { screen: WeatherScreen },
-  // Home: { screen: HomeScreen }
-});
+const MainNavigator = createStackNavigator(
+  {
+    Home: { screen: HomeScreen },
+    Weather: { screen: WeatherScreen },
+    // Home: { screen: HomeScreen }
+  },
+  {
+    headerMode: 'none'
+  }
+);
 
 const AppContainer = createAppContainer(MainNavigator);
 
@@ -315,6 +234,7 @@ export default class App extends React.Component {
   state = {
     isLoadingComplete: false
   }
+  
   render() {
     if (!this.state.isLoadingComplete) {
       return (
@@ -324,7 +244,9 @@ export default class App extends React.Component {
           onFinish={this._handleFinishLoading} />
       )
     } else {
-      return <AppContainer />;
+      return (
+          <AppContainer />
+      );
     }
   }
 
@@ -352,7 +274,7 @@ export class MisterPixel extends React.Component {
     return (
       <Text
         {...this.props}
-        style={[this.props.style, { fontFamily: "mister-pixel" }]}
+        style={[{ fontFamily: "mister-pixel", color: "#fff", fontSize: 16 }, this.props.style]}
       />
     );
   }

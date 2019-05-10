@@ -1,3 +1,120 @@
+        {
+          /* <ScrollView horizontal={true}>
+          <View
+            style={{
+              flex: 1,
+              flexDirection: "row",
+              justifyContent: "space-between"
+            }}
+          >
+            {next24hours.map(data => {
+              return (
+                <Text
+                  key={data.time}
+                  style={{
+                    width: 40,
+                    height: 39,
+                    backgroundColor: "powderblue",
+                    textAlign: "center"
+                  }}
+                >
+                  {Math.round(data.temperature)} {"\n"}
+                  {moment(moment.unix(data.time)).format("ha")}
+                </Text>
+              );
+            })}
+          </View>
+        </ScrollView> */
+        }
+        {
+          /* <View
+          style={{
+            flex: 1,
+            flexDirection: "row",
+            justifyContent: "space-between"
+          }}
+        >
+          <Text
+            style={{
+              width: 91,
+              height: 45,
+              textAlign: "center"
+            }}
+          >
+            Wind {"\n"}
+            {weatherData.currently.windSpeed}mph
+          </Text>
+          <Text
+            style={{
+              width: 91,
+              height: 39,
+              textAlign: "center"
+            }}
+          >
+            Percipitation {"\n"}
+            {weatherData.currently.precipProbability}%
+          </Text>
+          <Text
+            style={{
+              width: 91,
+              height: 39,
+              textAlign: "center"
+            }}
+          >
+            Humidity {"\n"}
+            {weatherData.currently.humidity}%
+          </Text>
+        </View>
+        <View
+          style={{
+            flex: 1,
+            flexDirection: "row",
+            justifyContent: "space-between"
+          }}
+        >
+          <Text
+            style={{
+              width: 103,
+              height: 56,
+              textAlign: "center"
+            }}
+          >
+            Sunrise {"\n"}
+            {moment(
+              moment.unix(weatherData.daily.data[0].sunriseTime)
+            ).format("h:mm a")}
+          </Text>
+          <Text
+            style={{
+              width: 103,
+              height: 56,
+              textAlign: "center"
+            }}
+          >
+            Sunset {"\n"}
+            {moment(
+              moment.unix(weatherData.daily.data[0].sunsetTime)
+            ).format("h:mm a")}
+          </Text>
+        </View>
+        <View>
+          {next7days.map(data => {
+            return (
+              <Text key={data.time}>
+                Day: {moment(moment.unix(data.time)).format("dddd")}
+                {"\n"}
+                High: {Math.round(data.temperatureHigh)}
+                {"\n"}
+                Low: {Math.round(data.temperatureLow)}
+                {"\n"}
+                Icon: {data.icon}
+              </Text>
+            );
+          })}
+        </View> */
+        }
+
+
 export const WEATHER_DATA = [{
   "latitude": 37.8267,
   "longitude": -122.4233,
