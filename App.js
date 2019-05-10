@@ -6,7 +6,6 @@ import {
   TextInput,
   TouchableOpacity,
   Animated,
-  Button,
   Easing,
   ScrollView
 } from "react-native";
@@ -75,6 +74,7 @@ export class HomeScreen extends React.Component {
   }
 
   getCoords() {
+    // should be stored in an .env file, but I live dangerously
     const apiKey = 'bba00951986840b0838be4158db370b8';
 
     return fetch(
@@ -96,7 +96,7 @@ export class HomeScreen extends React.Component {
   }
 
   getWeather(lat, lng) {
-    // Should be stored in an .env file, but I live dangerously
+    // should be stored in an .env file, but I live dangerously
     const apiKey = '3bd0a54365796fc1a01468fc9834a2b3';
 
     return fetch(
@@ -130,11 +130,10 @@ export class HomeScreen extends React.Component {
           />
         ) : null}
 
-        {/* TODO: Disable button if search field has no value */}
         {this.state.fontLoaded && !this.state.isFetchingData ? (
-          <TouchableOpacity onPress={this.onPress}>
+          <TouchableOpacity onPress={this.onPress} disabled={this.state.text ? false : true}>
             <View style={styles.button}>
-              <Text style={styles.buttonLabel}>Start</Text>
+              <Text style={[styles.buttonLabel, !this.state.text ? styles.disabledBtn : null]}>Start</Text>
             </View>
           </TouchableOpacity>
         ) : null}
@@ -322,6 +321,9 @@ const styles = StyleSheet.create({
     fontFamily: "mister-pixel",
     fontSize: 16,
     textAlign: 'center'
+  },
+  disabledBtn: {
+    opacity: 0.8
   }
 });
 
