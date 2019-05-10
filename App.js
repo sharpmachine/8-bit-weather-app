@@ -13,8 +13,37 @@ import { Font } from "expo";
 import { createStackNavigator, createAppContainer } from "react-navigation";
 import LottieView from "lottie-react-native";
 import * as WeatherData from "./assets/mockData/weatherData";
-// import moment from "momentjs";
 import moment from "moment";
+
+export class MisterPixel extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      fontLoaded: false
+    };
+  }
+
+  async componentDidMount() {
+    await Font.loadAsync({
+      'mister-pixel': require('./assets/fonts/misterPixelRegular.otf')
+    });
+
+    this.setState({ fontLoaded: true});
+  }
+
+  render() {
+    if (this.state.fontLoaded) {
+      return (
+        <Text
+          {...this.props}
+          style={[this.props.style, { fontFamily: "mister-pixel" }]}
+        />
+      );
+    } else {
+      return null;
+    }
+  }
+}
 
 export class HomeScreen extends React.Component {
   constructor(props) {
@@ -165,7 +194,7 @@ export class WeatherScreen extends React.Component {
 
     return (
       <View>
-        <Text>
+        <MisterPixel>
           City: {JSON.stringify(city)} {"\n"}
           Time:{" "}
           {moment(moment.unix(weatherData.currently.time)).format("h:mm a")}
@@ -174,8 +203,8 @@ export class WeatherScreen extends React.Component {
           {JSON.stringify(Math.round(weatherData.currently.temperature))}
           {"\n"}
           Summary: {JSON.stringify(weatherData.currently.summary)}
-        </Text>
-        <ScrollView horizontal={true}>
+        </MisterPixel>
+        {/* <ScrollView horizontal={true}>
           <View
             style={{
               flex: 1,
@@ -200,8 +229,8 @@ export class WeatherScreen extends React.Component {
               );
             })}
           </View>
-        </ScrollView>
-        <View
+        </ScrollView> */}
+        {/* <View
           style={{
             flex: 1,
             flexDirection: "row",
@@ -285,7 +314,7 @@ export class WeatherScreen extends React.Component {
               </Text>
             );
           })}
-        </View>
+        </View> */}
       </View>
     );
   }
@@ -328,8 +357,9 @@ const styles = StyleSheet.create({
 });
 
 const MainNavigator = createStackNavigator({
-  Home: { screen: HomeScreen },
-  Weather: { screen: WeatherScreen }
+  // Home: { screen: HomeScreen },
+  Weather: { screen: WeatherScreen },
+  Home: { screen: HomeScreen }
 });
 
 const AppContainer = createAppContainer(MainNavigator);
