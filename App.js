@@ -86,8 +86,9 @@ export class HomeScreen extends React.Component {
         this.setState({
           lat: responseJson.results[0].geometry.lat,
           lng: responseJson.results[0].geometry.lng,
-          city: responseJson.results[0].components.city
+          city: responseJson.results[0].components.city ? responseJson.results[0].components.city : this.titleCase(this.state.text)
         });
+        console.log('city: ' + this.state.city)
       })
       .catch(error => {
         console.error(error);
@@ -95,6 +96,7 @@ export class HomeScreen extends React.Component {
   }
 
   getWeather(lat, lng) {
+    // Should be stored in an .env file, but I live dangerously
     const apiKey = '3bd0a54365796fc1a01468fc9834a2b3';
 
     return fetch(
@@ -107,6 +109,13 @@ export class HomeScreen extends React.Component {
         weatherData: responseJson
       })
     }) ;
+  }
+
+  // utility method
+  titleCase(str) {
+    return str.toLowerCase().split(" ").map(word => {
+      return (word.charAt(0).toUpperCase() + word.slice(1));
+    }).join(' ');
   }
 
   render() {
@@ -317,8 +326,8 @@ const styles = StyleSheet.create({
 });
 
 const MainNavigator = createStackNavigator({
-  Weather: { screen: WeatherScreen },
-  Home: { screen: HomeScreen }
+  Home: { screen: HomeScreen },
+  Weather: { screen: WeatherScreen }
 });
 
 const AppContainer = createAppContainer(MainNavigator);
