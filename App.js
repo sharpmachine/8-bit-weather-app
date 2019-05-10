@@ -5,78 +5,25 @@ import {
   View,
   TextInput,
   TouchableOpacity,
-  Animated,
-  Easing,
   ScrollView
 } from "react-native";
-import { Font } from "expo";
+import { Font, AppLoading } from "expo";
 import { createStackNavigator, createAppContainer } from "react-navigation";
 import LottieView from "lottie-react-native";
 import * as WeatherData from "./assets/mockData/weatherData";
 import moment from "moment";
 
-export class MisterPixel extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      fontLoaded: false
-    };
-  }
-
-  async componentDidMount() {
-    await Font.loadAsync({
-      'mister-pixel': require('./assets/fonts/misterPixelRegular.otf')
-    });
-
-    this.setState({ fontLoaded: true});
-  }
-
-  render() {
-    if (this.state.fontLoaded) {
-      return (
-        <Text
-          {...this.props}
-          style={[this.props.style, { fontFamily: "mister-pixel" }]}
-        />
-      );
-    } else {
-      return null;
-    }
-  }
-}
-
 export class HomeScreen extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      text: "",
-      fontLoaded: false,
+      text: "Seattle, Wa", // TODO: For testing – set to empty string for prod
       lat: null,
       lng: null,
       city: null,
       isFetchingData: false,
-      weatherData: null,
-      progress: new Animated.Value(1)
+      weatherData: null
     };
-  }
-
-  // TODO: Preload font somehow
-  async componentDidMount() {
-    await Font.loadAsync({
-      'mister-pixel': require('./assets/fonts/misterPixelRegular.otf')
-    });
-
-    this.setState({ fontLoaded: true});
-
-    // TODO: For testing – remove when not neeed anymore
-    this.setState({ text: 'Seattle, Wa' })
-
-    
-    Animated.timing(this.state.progress, {
-      toValue: 1,
-      duration: 5000,
-      easing: Easing.linear
-    }).start();
   }
 
   onPress = () => {
@@ -150,7 +97,7 @@ export class HomeScreen extends React.Component {
   render() {
     return (
       <View style={styles.container}>
-        {this.state.fontLoaded && !this.state.isFetchingData ? (
+        {!this.state.isFetchingData ? (
           <TextInput
             style={styles.searchInput}
             placeholder="search for a city"
@@ -159,24 +106,24 @@ export class HomeScreen extends React.Component {
           />
         ) : null}
 
-        {this.state.fontLoaded && !this.state.isFetchingData ? (
+        {!this.state.isFetchingData ? (
           <TouchableOpacity onPress={this.onPress} disabled={this.state.text ? false : true}>
             <View style={styles.button}>
-              <Text style={[styles.buttonLabel, !this.state.text ? styles.disabledBtn : null]}>Start</Text>
+              <MisterPixel style={[styles.buttonLabel, !this.state.text ? styles.disabledBtn : null]}>Start</MisterPixel>
             </View>
           </TouchableOpacity>
         ) : null}
 
-        {this.state.fontLoaded && this.state.isFetchingData ? (
+        {this.state.isFetchingData ? (
           <View>
             <LottieView
               source={require("./assets/icons/loading.json")}
               progress={this.state.progress}
             />
-            <Text style={styles.loadingState}>
+            <MisterPixel style={styles.loadingState}>
               Loading… {"\n"}
               Do not turn off the power
-            </Text>
+            </MisterPixel>
           </View>
         ) : null}
       </View>
@@ -357,15 +304,56 @@ const styles = StyleSheet.create({
 });
 
 const MainNavigator = createStackNavigator({
-  // Home: { screen: HomeScreen },
+  Home: { screen: HomeScreen },
   Weather: { screen: WeatherScreen },
-  Home: { screen: HomeScreen }
+  // Home: { screen: HomeScreen }
 });
 
 const AppContainer = createAppContainer(MainNavigator);
 
 export default class App extends React.Component {
+  state = {
+    isLoadingComplete: false
+  }
   render() {
-    return <AppContainer />;
+    if (!this.state.isLoadingComplete) {
+      return (
+        <AppLoading 
+          startAsync={this._loadResourcesAsync} 
+          onError={this._handleLoadingError} 
+          onFinish={this._handleFinishLoading} />
+      )
+    } else {
+      return <AppContainer />;
+    }
+  }
+
+  _loadResourcesAsync = async () => {
+    return Promise.all([
+      Font.loadAsync({
+        'mister-pixel': require('./assets/fonts/misterPixelRegular.otf')
+      }),
+    ]);
+  };
+
+    _handleLoadingError = error => {
+    // In this case, you might want to report the error to your error
+    // reporting service, for example Sentry
+    console.warn(error);
+  };
+
+  _handleFinishLoading = () => {
+    this.setState({ isLoadingComplete: true });
+  };
+}
+
+export class MisterPixel extends React.Component {
+  render() {
+    return (
+      <Text
+        {...this.props}
+        style={[this.props.style, { fontFamily: "mister-pixel" }]}
+      />
+    );
   }
 }
