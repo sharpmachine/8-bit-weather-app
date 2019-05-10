@@ -19,7 +19,7 @@ export class HomeScreen extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      text: "Seattle, Wa", // TODO: For testing – set to empty string for prod
+      text: "Seattle Wa", // TODO: For testing – set to empty string for prod
       lat: null,
       lng: null,
       city: null,
@@ -43,10 +43,17 @@ export class HomeScreen extends React.Component {
           this.props.navigation.navigate("Weather", { 
             weatherData: this.state.weatherData,
             city: this.state.city
-          })
-          // .then(() => {
-          //   this.setState({ isFetchingData: false });
-          // });
+          });
+          // reset states when navigating completes
+          this.props.navigation.addListener(
+            'didBlur',
+            () => {
+              this.setState({ 
+                isFetchingData: false,
+                text: ""
+              });
+            }
+          )
         });
       });
   }
@@ -66,7 +73,6 @@ export class HomeScreen extends React.Component {
           lng: responseJson.results[0].geometry.lng,
           city: responseJson.results[0].components.city ? responseJson.results[0].components.city : this.titleCase(this.state.text)
         });
-        console.log('city: ' + this.state.city)
       })
       .catch(error => {
         console.error(error);
