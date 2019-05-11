@@ -140,6 +140,101 @@ export class HomeScreen extends React.Component {
 }
 
 export class WeatherScreen extends React.Component {
+
+  getGradient(temp, currentTime, sunrise, sunset) {
+    let gradient = {
+      startColor: "",
+      endColor: "",
+      statusBarStyle: "light-content"
+    };
+
+    const gradientSets = 9;
+    const lengthOfDay = sunset - sunrise;
+    const durationPergradient = Math.floor(lengthOfDay / (gradientSets - 1));
+    const intervals = []
+
+    var i;
+    for (i = 0; i < (gradientSets - 1); i++) {
+      intervals.push(sunrise + (durationPergradient * i))
+    }
+
+    if (temp < 40) {
+      console.log("less than 40");
+    } else if (temp > 40 && temp < 85) {
+
+      // if between sunset and sunrise
+     if (currentTime >= sunrise && currentTime < intervals[1]) {
+        // gradient 1
+        console.log("between sunrise and gradient 1");
+        gradient.startColor = "#F09931";
+        gradient.endColor = "#F04A30";
+        gradient.statusBarStyle = "light-content";
+        
+      } else if (currentTime >= intervals[1] && currentTime < intervals[2]) {
+        // gradient 2
+        console.log("between gradient 1 and 2");
+        gradient.startColor = "#F05E7D";
+        gradient.endColor = "#A758BD";
+        gradient.statusBarStyle = "light-content";
+        
+      } else if (currentTime >= intervals[2] && currentTime < intervals[3]) {
+        // gradient 3
+        console.log("between gradient 2 and 3");
+        gradient.startColor = "#B890C2";
+        gradient.endColor = "#A758BD";
+        gradient.statusBarStyle = "light-content";
+
+      } else if (currentTime >= intervals[3] && currentTime < intervals[4]) {
+        // gradient 4
+        console.log("between gradient 3 and 4");
+        gradient.startColor = "#1AD0F2";
+        gradient.endColor = "#1CA2F6";
+        gradient.statusBarStyle = "light-content";
+
+      } else if (currentTime >= intervals[4] && currentTime < intervals[5]) {
+        // gradient 5
+        console.log("between gradient 5 and 6");
+        gradient.startColor = "#15C2ED";
+        gradient.endColor = "#1D9BEE";
+        gradient.statusBarStyle = "light-content";
+
+      } else if (currentTime >= intervals[5] && currentTime < intervals[6]) {
+        // gradient 6
+        console.log("between gradient 6 and 7");
+        gradient.startColor = "#1799DB";
+        gradient.endColor = "#3F7AC6";
+        gradient.statusBarStyle = "light-content";
+
+      } else if (currentTime >= intervals[6] && currentTime < intervals[7]) {
+        // gradient 7
+        console.log("between gradient 7 and sunset");
+        gradient.startColor = "#1B72C9";
+        gradient.endColor = "#5E5AA1";
+        gradient.statusBarStyle = "light-content";
+
+      } else if (currentTime >= intervals[7] && currentTime < sunset) {
+        // gradient 8
+        console.log("between gradient 7 and 8");
+        gradient.startColor = "#1F4DB9";
+        gradient.endColor = "#513773";
+        gradient.statusBarStyle = "light-content";
+
+      } else {
+        // gradient 9
+        console.log("between sunset and sunrise");
+        gradient.startColor = "#232BAA";
+        gradient.endColor = "#120D34";
+        gradient.statusBarStyle = "light-content";
+      }
+    } else if (temp > 85) {
+      console.log("greater than 85");
+    } else {
+      console.log("doesnt work");
+    }
+
+    return gradient;
+  }
+
   render() {
     const { navigation } = this.props;
     const weatherData = navigation.getParam('weatherData', WeatherData.WEATHER_DATA[0]);
@@ -149,11 +244,53 @@ export class WeatherScreen extends React.Component {
 
     return (
       <View style={{ flex: 1 }}>
-        <StatusBar barStyle="light-content" />
-        <SafeAreaView style={{ flex: 0, backgroundColor: "#F09931" }} />
-        <SafeAreaView style={{ flex: 1, backgroundColor: "#F04A30" }}>
+        <StatusBar
+          barStyle={
+            this.getGradient(
+              weatherData.currently.temperature,
+              weatherData.currently.time,
+              weatherData.daily.data[0].sunriseTime,
+              weatherData.daily.data[0].sunsetTime
+            ).statusBarStyle
+          }
+        />
+        <SafeAreaView
+          style={{
+            flex: 0,
+            backgroundColor: this.getGradient(
+              weatherData.currently.temperature,
+              weatherData.currently.time,
+              weatherData.daily.data[0].sunriseTime,
+              weatherData.daily.data[0].sunsetTime
+            ).startColor
+          }}
+        />
+        <SafeAreaView
+          style={{
+            flex: 1,
+            backgroundColor: this.getGradient(
+              weatherData.currently.temperature,
+              weatherData.currently.time,
+              weatherData.daily.data[0].sunriseTime,
+              weatherData.daily.data[0].sunsetTime
+            ).endColor
+          }}
+        >
           <LinearGradient
-            colors={["#F09931", "#F04A30"]}
+            colors={[
+              this.getGradient(
+                weatherData.currently.temperature,
+                weatherData.currently.time,
+                weatherData.daily.data[0].sunriseTime,
+                weatherData.daily.data[0].sunsetTime
+              ).startColor,
+              this.getGradient(
+                weatherData.currently.temperature,
+                weatherData.currently.time,
+                weatherData.daily.data[0].sunriseTime,
+                weatherData.daily.data[0].sunsetTime
+              ).endColor
+            ]}
             style={{ flex: 1 }}
           >
             <View style={styles.container}>
