@@ -13,7 +13,7 @@ import { Font, AppLoading, LinearGradient } from "expo";
 import { createStackNavigator, createAppContainer } from "react-navigation";
 import LottieView from "lottie-react-native";
 import * as WeatherData from "./assets/mockData/weatherData";
-import moment from "moment";
+import moment from "moment-timezone";
 
 export class HomeScreen extends React.Component {
   constructor(props) {
@@ -153,7 +153,7 @@ export class WeatherScreen extends React.Component {
     const durationPergradient = Math.floor(lengthOfDay / (gradientSets - 1));
     const intervals = []
 
-    var i;
+    let i;
     for (i = 0; i < (gradientSets - 1); i++) {
       intervals.push(sunrise + (durationPergradient * i))
     }
@@ -242,6 +242,8 @@ export class WeatherScreen extends React.Component {
     const next24hours = weatherData.hourly.data.slice(0, 24);
     const next7days = weatherData.daily.data;
 
+    console.log(weatherData.timezone)
+
     return (
       <View style={{ flex: 1 }}>
         <StatusBar
@@ -312,9 +314,12 @@ export class WeatherScreen extends React.Component {
                 {weatherData.currently.summary}
               </MisterPixel>
               <MisterPixel>
-                {moment(moment.unix(weatherData.currently.time)).format(
-                  "h:mm a"
-                )}
+                {moment(
+                  moment
+                    .unix(weatherData.currently.time)
+                    .tz(weatherData.timezone)
+                )
+                  .format("h:mm a")}
               </MisterPixel>
             </View>
           </LinearGradient>
