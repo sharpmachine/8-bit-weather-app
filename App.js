@@ -141,18 +141,34 @@ export class HomeScreen extends React.Component {
 
 export class WeatherScreen extends React.Component {
 
-  getGradient(temp, currentTime, sunrise, sunset) {
+  constructor(props) {
+    super (props);
+    const { navigation } = this.props;
+    this.state = {
+      weatherData: navigation.getParam('weatherData', WeatherData.WEATHER_DATA[0]),
+      city: navigation.getParam('city', 'Seattle')
+    }
+  }
+
+  getGradient() {
+    const temp = this.state.weatherData.currently.temperature;
+    const currentTime = this.state.weatherData.currently.time;
+    const sunrise = this.state.weatherData.daily.data[0].sunriseTime;
+    const sunset = this.state.weatherData.daily.data[0].sunsetTime;
+    // set number of sets per temp bucket
+    const gradientSets = 9;
+    // get duration of time between sunset and sunrise
+    const lengthOfDay = sunset - sunrise;
+    // set how long each gradient will show for
+    const durationPergradient = Math.floor(lengthOfDay / (gradientSets - 1));
+    const intervals = []
     let gradient = {
       startColor: "",
-      endColor: "",
+      endColor: "F09931",
       statusBarStyle: "light-content"
     };
 
-    const gradientSets = 9;
-    const lengthOfDay = sunset - sunrise;
-    const durationPergradient = Math.floor(lengthOfDay / (gradientSets - 1));
-    const intervals = []
-
+    // set times that gradients switch
     let i;
     for (i = 0; i < (gradientSets - 1); i++) {
       intervals.push(sunrise + (durationPergradient * i))
@@ -160,8 +176,11 @@ export class WeatherScreen extends React.Component {
 
     if (temp < 40) {
       console.log("less than 40");
+      gradient.startColor = "#000";
+      gradient.endColor = "#000";
+      gradient.statusBarStyle = "dark-content";
     } else if (temp > 40 && temp < 85) {
-
+      console.log("between 40 and 85");
       // if between sunset and sunrise
      if (currentTime >= sunrise && currentTime < intervals[1]) {
         // gradient 1
@@ -228,70 +247,45 @@ export class WeatherScreen extends React.Component {
       }
     } else if (temp > 85) {
       console.log("greater than 85");
+      gradient.startColor = "#000";
+      gradient.endColor = "#000";
+      gradient.statusBarStyle = "dark-content";
     } else {
-      console.log("doesnt work");
+      gradient.startColor = "#000";
+      gradient.endColor = "#000";
+      gradient.statusBarStyle = "dark-content";
     }
 
     return gradient;
   }
 
   render() {
-    const { navigation } = this.props;
-    const weatherData = navigation.getParam('weatherData', WeatherData.WEATHER_DATA[0]);
-    const city = navigation.getParam('city', 'Seattle');
-    const next24hours = weatherData.hourly.data.slice(0, 24);
-    const next7days = weatherData.daily.data;
-
-    console.log(weatherData.timezone)
+    // const next24hours = this.state.weatherData.hourly.data.slice(0, 24);
+    // const next7days = this.state.weatherData.daily.data;
 
     return (
       <View style={{ flex: 1 }}>
         <StatusBar
           barStyle={
-            this.getGradient(
-              weatherData.currently.temperature,
-              weatherData.currently.time,
-              weatherData.daily.data[0].sunriseTime,
-              weatherData.daily.data[0].sunsetTime
-            ).statusBarStyle
+            this.getGradient().statusBarStyle
           }
         />
         <SafeAreaView
           style={{
             flex: 0,
-            backgroundColor: this.getGradient(
-              weatherData.currently.temperature,
-              weatherData.currently.time,
-              weatherData.daily.data[0].sunriseTime,
-              weatherData.daily.data[0].sunsetTime
-            ).startColor
+            backgroundColor: this.getGradient().startColor
           }}
         />
         <SafeAreaView
           style={{
             flex: 1,
-            backgroundColor: this.getGradient(
-              weatherData.currently.temperature,
-              weatherData.currently.time,
-              weatherData.daily.data[0].sunriseTime,
-              weatherData.daily.data[0].sunsetTime
-            ).endColor
+            backgroundColor: this.getGradient().endColor
           }}
         >
           <LinearGradient
             colors={[
-              this.getGradient(
-                weatherData.currently.temperature,
-                weatherData.currently.time,
-                weatherData.daily.data[0].sunriseTime,
-                weatherData.daily.data[0].sunsetTime
-              ).startColor,
-              this.getGradient(
-                weatherData.currently.temperature,
-                weatherData.currently.time,
-                weatherData.daily.data[0].sunriseTime,
-                weatherData.daily.data[0].sunsetTime
-              ).endColor
+              this.getGradient().startColor,
+              this.getGradient().endColor
             ]}
             style={{ flex: 1 }}
           >
@@ -299,25 +293,25 @@ export class WeatherScreen extends React.Component {
               <MisterPixel
                 style={{ fontSize: 24, marginTop: 70, marginBottom: 7 }}
               >
-                {city}
+                {this.state.city}
               </MisterPixel>
               <MisterPixel style={{ marginBottom: 187 }}>
-                {moment(moment.unix(weatherData.currently.time)).format(
+                {moment(moment.unix(this.state.weatherData.currently.time)).format(
                   "MMMM D"
                 )}
                 , 1988
               </MisterPixel>
               <MisterPixel style={{ fontSize: 58, marginBottom: 7 }}>
-                {Math.round(weatherData.currently.temperature)}°
+                {Math.round(this.state.weatherData.currently.temperature)}°
               </MisterPixel>
               <MisterPixel style={{ marginBottom: 7 }}>
-                {weatherData.currently.summary}
+                {this.state.weatherData.currently.summary}
               </MisterPixel>
               <MisterPixel>
                 {moment(
                   moment
-                    .unix(weatherData.currently.time)
-                    .tz(weatherData.timezone)
+                    .unix(this.state.weatherData.currently.time)
+                    .tz(this.state.weatherData.timezone)
                 )
                   .format("h:mm a")}
               </MisterPixel>
