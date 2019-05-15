@@ -1,12 +1,10 @@
 import React from 'react';
 import {
 	StyleSheet,
-	Text,
 	View,
 	TextInput,
 	TouchableOpacity,
 } from "react-native";
-import { createStackNavigator, createAppContainer } from "react-navigation";
 import { MisterPixel } from "../components/StyledText";
 import LottieView from "lottie-react-native";
 
@@ -122,10 +120,13 @@ export default class HomeScreen extends React.Component {
 
 				{this.state.isFetchingData ? (
 					<View>
+						{/* <LottieView source={require('../assets/icons/loading.json')} autoPlay loop /> */}
+						<MisterPixel style={[styles.loadingState, { fontSize: 24, marginBottom: 9 }]}>
+							Loading…
+        		</MisterPixel>
 						<MisterPixel style={styles.loadingState}>
-							Loading… {"\n"}
 							Do not turn off the power
-            </MisterPixel>
+        		</MisterPixel>
 					</View>
 				) : null}
 			</View>
@@ -163,8 +164,7 @@ const styles = StyleSheet.create({
 		color: "#000"
 	},
 	loadingState: {
-		fontFamily: "mister-pixel",
-		textAlign: "center",
-		color: "#000"
+		color: "#000",
+		textAlign: "center"
 	}
 });
