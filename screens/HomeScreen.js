@@ -87,7 +87,10 @@ export default class HomeScreen extends React.Component {
 				this.setState({
 					weatherData: responseJson
 				})
-			});
+			})
+			.catch(error => {
+				console.error(error);
+			});;
 	}
 
 	// utility method

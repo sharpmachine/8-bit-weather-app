@@ -11,6 +11,7 @@ import { LinearGradient } from "expo";
 import { MisterPixel } from "../components/StyledText";
 import LottieView from "lottie-react-native";
 import * as WeatherData from "../assets/mockData/weatherData";
+import * as Gradients from "../constants/Gradients"
 import moment from "moment-timezone";
 
 export default class WeatherScreen extends React.Component {
@@ -24,112 +25,130 @@ export default class WeatherScreen extends React.Component {
 	}
 
 	getGradient() {
+		const gradients = Gradients.GRADIENTS[0];
 		const temp = this.state.weatherData.currently.temperature;
 		const currentTime = this.state.weatherData.currently.time;
 		const sunrise = this.state.weatherData.daily.data[0].sunriseTime;
 		const sunset = this.state.weatherData.daily.data[0].sunsetTime;
 		// set number of sets per temp bucket
-		const gradientSets = 9;
+		const gradientsCount = 9;
 		// get duration of time between sunset and sunrise
 		const lengthOfDay = sunset - sunrise;
 		// set how long each gradient will show for
-		const durationPergradient = Math.floor(lengthOfDay / (gradientSets - 1));
+		const durationPergradient = Math.floor(lengthOfDay / (gradientsCount - 1));
 		const intervals = []
-		let gradient = {
+		let selectedGradient = {
 			startColor: "",
-			endColor: "F09931",
+			endColor: "",
 			statusBarStyle: "light-content"
 		};
 
 		// set times that gradients switch
 		let i;
-		for (i = 0; i < (gradientSets - 1); i++) {
+		for (i = 0; i < (gradientsCount - 1); i++) {
 			intervals.push(sunrise + (durationPergradient * i))
 		}
 
-		if (temp < 40) {
-			console.log("less than 40");
-			gradient.startColor = "#000";
-			gradient.endColor = "#000";
-			gradient.statusBarStyle = "dark-content";
-		} else if (temp > 40 && temp < 85) {
-			console.log("between 40 and 85");
+		if (temp > 85) {
+			console.log("greater than 85");
 			// if between sunset and sunrise
 			if (currentTime >= sunrise && currentTime < intervals[1]) {
-				// gradient 1
-				console.log("between sunrise and gradient 1");
-				gradient.startColor = "#F09931";
-				gradient.endColor = "#F04A30";
-				gradient.statusBarStyle = "light-content";
-
+				// gradient 0 (sunrise)
+				selectedGradient = gradients.above_85[0];
 			} else if (currentTime >= intervals[1] && currentTime < intervals[2]) {
-				// gradient 2
-				console.log("between gradient 1 and 2");
-				gradient.startColor = "#F05E7D";
-				gradient.endColor = "#A758BD";
-				gradient.statusBarStyle = "light-content";
-
+				// gradient 1
+				selectedGradient = gradients.above_85[1];
 			} else if (currentTime >= intervals[2] && currentTime < intervals[3]) {
-				// gradient 3
-				console.log("between gradient 2 and 3");
-				gradient.startColor = "#B890C2";
-				gradient.endColor = "#A758BD";
-				gradient.statusBarStyle = "light-content";
-
+				// gradient 2
+				selectedGradient = gradients.above_85[2];
 			} else if (currentTime >= intervals[3] && currentTime < intervals[4]) {
-				// gradient 4
-				console.log("between gradient 3 and 4");
-				gradient.startColor = "#1AD0F2";
-				gradient.endColor = "#1CA2F6";
-				gradient.statusBarStyle = "light-content";
-
+				// gradient 3
+				selectedGradient = gradients.above_85[3];
 			} else if (currentTime >= intervals[4] && currentTime < intervals[5]) {
-				// gradient 5
-				console.log("between gradient 5 and 6");
-				gradient.startColor = "#15C2ED";
-				gradient.endColor = "#1D9BEE";
-				gradient.statusBarStyle = "light-content";
-
+				// gradient 4
+				selectedGradient = gradients.above_85[4];
 			} else if (currentTime >= intervals[5] && currentTime < intervals[6]) {
-				// gradient 6
-				console.log("between gradient 6 and 7");
-				gradient.startColor = "#1799DB";
-				gradient.endColor = "#3F7AC6";
-				gradient.statusBarStyle = "light-content";
-
+				// gradient 5
+				selectedGradient = gradients.above_85[5];
 			} else if (currentTime >= intervals[6] && currentTime < intervals[7]) {
-				// gradient 7
-				console.log("between gradient 7 and sunset");
-				gradient.startColor = "#1B72C9";
-				gradient.endColor = "#5E5AA1";
-				gradient.statusBarStyle = "light-content";
-
+				// gradient 6
+				selectedGradient = gradients.above_85[6];
 			} else if (currentTime >= intervals[7] && currentTime < sunset) {
-				// gradient 8
-				console.log("between gradient 7 and 8");
-				gradient.startColor = "#1F4DB9";
-				gradient.endColor = "#513773";
-				gradient.statusBarStyle = "light-content";
-
+				// gradient 7
+				selectedGradient = gradients.above_85[7];
 			} else {
-				// gradient 9
-				console.log("between sunset and sunrise");
-				gradient.startColor = "#232BAA";
-				gradient.endColor = "#120D34";
-				gradient.statusBarStyle = "light-content";
+				// gradient 8 (sunset)
+				selectedGradient = gradients.above_85[8];
 			}
-		} else if (temp > 85) {
-			console.log("greater than 85");
-			gradient.startColor = "#000";
-			gradient.endColor = "#000";
-			gradient.statusBarStyle = "dark-content";
+		} else if (temp >= 40 && temp < 85) {
+			// if between sunset and sunrise
+			if (currentTime >= sunrise && currentTime < intervals[1]) {
+				// gradient 0 (sunrise)
+				selectedGradient = gradients.between_40_85[0];
+			} else if (currentTime >= intervals[1] && currentTime < intervals[2]) {
+				// gradient 1
+				selectedGradient = gradients.between_40_85[1];
+			} else if (currentTime >= intervals[2] && currentTime < intervals[3]) {
+				// gradient 2
+				selectedGradient = gradients.between_40_85[2];
+			} else if (currentTime >= intervals[3] && currentTime < intervals[4]) {
+				// gradient 3
+				selectedGradient = gradients.between_40_85[3];
+			} else if (currentTime >= intervals[4] && currentTime < intervals[5]) {
+				// gradient 4
+				selectedGradient = gradients.between_40_85[4];
+			} else if (currentTime >= intervals[5] && currentTime < intervals[6]) {
+				// gradient 5
+				selectedGradient = gradients.between_40_85[5];
+			} else if (currentTime >= intervals[6] && currentTime < intervals[7]) {
+				// gradient 6
+				selectedGradient = gradients.between_40_85[6];
+			} else if (currentTime >= intervals[7] && currentTime < sunset) {
+				// gradient 7
+				selectedGradient = gradients.between_40_85[7];
+			} else {
+				// gradient 8 (sunset)
+				selectedGradient = gradients.between_40_85[8];
+			}
+		} else if (temp < 40 ) {
+			console.log("less than 40");
+			// if between sunset and sunrise
+			if (currentTime >= sunrise && currentTime < intervals[1]) {
+				// gradient 0 (sunrise)
+				selectedGradient = gradients.below_40[0];
+			} else if (currentTime >= intervals[1] && currentTime < intervals[2]) {
+				// gradient 1
+				selectedGradient = gradients.below_40[1];
+			} else if (currentTime >= intervals[2] && currentTime < intervals[3]) {
+				// gradient 2
+				selectedGradient = gradients.below_40[2];
+			} else if (currentTime >= intervals[3] && currentTime < intervals[4]) {
+				// gradient 3
+				selectedGradient = gradients.below_40[3];
+			} else if (currentTime >= intervals[4] && currentTime < intervals[5]) {
+				// gradient 4
+				selectedGradient = gradients.below_40[4];
+			} else if (currentTime >= intervals[5] && currentTime < intervals[6]) {
+				// gradient 5
+				selectedGradient = gradients.below_40[5];
+			} else if (currentTime >= intervals[6] && currentTime < intervals[7]) {
+				// gradient 6
+				selectedGradient = gradients.below_40[6];
+			} else if (currentTime >= intervals[7] && currentTime < sunset) {
+				// gradient 7
+				selectedGradient = gradients.below_40[7];
+			} else {
+				// gradient 8 (sunset)
+				selectedGradient = gradients.below_40[8];
+			}
 		} else {
-			gradient.startColor = "#000";
-			gradient.endColor = "#000";
-			gradient.statusBarStyle = "dark-content";
+			// fallback
+			selectedGradient.startColor = "#000";
+			selectedGradient.endColor = "#000";
+			selectedGradient.statusBarStyle = "dark-content";
 		}
 
-		return gradient;
+		return selectedGradient;
 	}
 
 	render() {
