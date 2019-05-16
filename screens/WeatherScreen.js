@@ -171,6 +171,12 @@ export default class WeatherScreen extends React.Component {
 			return require("../assets/icons/snow.json");
 		} else if (icon == "cloudy") {
 			return require("../assets/icons/cloud.json");
+		// } else if (icon == "partly-cloudy-day" || icon == "partly-cloudy-night") {
+		// 	return require("../assets/icons/partly-cloudy.json");
+		// } else if (icon == "wind") {
+		// 	return require("../assets/icons/wind.json");
+		// } else if (icon == "fog") {
+		// 	return require("../assets/icons/fog.json");
 		} else {
 			return require("../assets/icons/cloud.json")
 		}
