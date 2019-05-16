@@ -12,7 +12,7 @@ export default class HomeScreen extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			text: "Seattle Wa", // TODO: For testing – set to empty string for prod
+			text: "", // TODO: For testing – set to empty string for prod
 			lat: null,
 			lng: null,
 			city: null,

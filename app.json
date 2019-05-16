@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "WeatherApp",
-    "slug": "proj",
+    "name": "8-bit Weather App",
+    "slug": "8-bit-weather-app",
     "privacy": "public",
     "sdkVersion": "32.0.0",
     "platforms": [
@@ -24,6 +24,8 @@
     ],
     "ios": {
       "supportsTablet": true
-    }
+    },
+    "description": "Yet another weather app, but with an old school flair.",
+    "githubUrl": "https://github.com/sharpmachine/8-bit-weather-app"
   }
 }

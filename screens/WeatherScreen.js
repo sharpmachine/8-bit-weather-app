@@ -152,7 +152,7 @@ export default class WeatherScreen extends React.Component {
 	}
 
 	render() {
-		// const next24hours = this.state.weatherData.hourly.data.slice(0, 24);
+		const next24hours = this.state.weatherData.hourly.data.slice(0, 24);
 		// const next7days = this.state.weatherData.daily.data;
 
 		return (
@@ -210,6 +210,34 @@ export default class WeatherScreen extends React.Component {
 						</View>
 					</LinearGradient>
 				</SafeAreaView>
+				{/* <ScrollView horizontal={true} style={{top: 0, backgroundColor: "blue"}}>
+					<View
+						style={{
+							flex: 1,
+							flexDirection: "row",
+							justifyContent: "space-between",
+							backgroundColor: "red",
+							top: 100
+						}}
+					>
+						{next24hours.map(data => {
+							return (
+								<Text
+									key={data.time}
+									style={{
+										width: 40,
+										height: 39,
+										backgroundColor: "powderblue",
+										textAlign: "center"
+									}}
+								>
+									{Math.round(data.temperature)} {"\n"}
+									{moment(moment.unix(data.time)).format("ha")}
+								</Text>
+							);
+						})}
+					</View>
+				</ScrollView> */}
 			</View>
 		);
 	}
