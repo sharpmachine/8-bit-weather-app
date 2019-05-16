@@ -6,7 +6,8 @@ import {
 	ScrollView,
 	SafeAreaView,
 	TouchableOpacity,
-	StatusBar
+	StatusBar,
+	Image
 } from "react-native";
 import { LinearGradient } from "expo";
 import { MisterPixel } from "../components/StyledText";
@@ -161,9 +162,23 @@ export default class WeatherScreen extends React.Component {
 		)
 	}
 
+	getConditionIcon(icon) {
+		if (icon == "clear-day" || icon == "clear night") {
+			return require("../assets/icons/cloud.json");
+		} else if (icon == "rain") {
+			return require("../assets/icons/rain.json");
+		} else if (icon == "snow" || icon == "sleet") {
+			return require("../assets/icons/snow.json");
+		} else if (icon == "cloudy") {
+			return require("../assets/icons/cloud.json");
+		} else {
+			return require("../assets/icons/cloud.json")
+		}
+	}
+
 	render() {
 		const next24hours = this.state.weatherData.hourly.data.slice(0, 24);
-		// const next7days = this.state.weatherData.daily.data;
+		const next7days = this.state.weatherData.daily.data;
 
 		return (
 			<View style={{ flex: 1 }}>
@@ -253,8 +268,128 @@ export default class WeatherScreen extends React.Component {
 							);
 						})}
 					</View>
+					<View
+						style={{
+							flex: 1,
+							flexDirection: "row",
+							justifyContent: "space-between"
+						}}
+					>
+						<MisterPixel
+							style={{
+								width: 91,
+								height: 45,
+								textAlign: "center"
+							}}
+						>
+							Wind {"\n"}
+							{this.state.weatherData.currently.windSpeed}mph
+          </MisterPixel>
+						<MisterPixel
+							style={{
+								width: 91,
+								height: 39,
+								textAlign: "center"
+							}}
+						>
+							Percipitation {"\n"}
+							{this.state.weatherData.currently.precipProbability}%
+          </MisterPixel>
+						<MisterPixel
+							style={{
+								width: 91,
+								height: 39,
+								textAlign: "center"
+							}}
+						>
+							Humidity {"\n"}
+							{this.state.weatherData.currently.humidity}%
+          </MisterPixel>
+					</View>
+					<View
+						style={{
+							flex: 1,
+							flexDirection: "row",
+							justifyContent: "space-between"
+						}}
+					>
+						<MisterPixel
+							style={{
+								width: 103,
+								height: 56,
+								textAlign: "center"
+							}}
+						>
+							<Image
+								style={{ width: 49, height: 22.75 }}
+								source={require('../assets/icons/sunrise.png')}
+							/>
+							{"\n"}
+							Sunrise {"\n"}
+							{moment(
+								moment.unix(this.state.weatherData.daily.data[0].sunriseTime)
+							).format("h:mm a")}
+						</MisterPixel>
+						<MisterPixel
+							style={{
+								width: 103,
+								height: 56,
+								textAlign: "center"
+							}}
+						>
+							<Image
+								style={{ width: 49, height: 22.75 }}
+								source={require('../assets/icons/sunset.png')}
+							/>
+							{"\n"}
+							Sunset {"\n"}
+							{moment(
+								moment.unix(this.state.weatherData.daily.data[0].sunsetTime)
+							).format("h:mm a")}
+						</MisterPixel>
+					</View>
+					<View
+						style={{
+							flex: 1,
+							flexDirection: "column",
+							justifyContent: "space-between",
+							paddingBottom: 50
+						}}>
+						{next7days.map(data => {
+							return (
+								<View
+									key={data.time}
+									style={{
+										flex: 1,
+										flexDirection: "row",
+										justifyContent: "space-between"
+								}}>
+									<MisterPixel style={{width: 80}}>
+										{moment(moment.unix(data.time)).format("dddd")}
+									</MisterPixel>
+									<MisterPixel style={{ width: 16 }}>
+										{Math.round(data.temperatureLow)}
+									</MisterPixel>
+									<MisterPixel style={{ width: 16 }}>
+										{Math.round(data.temperatureHigh)}
+									</MisterPixel>
+									<LottieView 
+										style={{ width: 31 }} 
+										source={this.getConditionIcon(data.icon)} 
+										autoPlay 
+										loop />
+									{/* <MisterPixel style={{ width: 31 }}>
+										{data.icon}
+
+										
+									</MisterPixel> */}
+								</View>
+							);
+						})}
+					</View>
 				</BottomDrawer>
 			</View>
+			
 		);
 	}
 }
