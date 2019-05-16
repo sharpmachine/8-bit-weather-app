@@ -5,6 +5,7 @@ import {
 	View,
 	ScrollView,
 	SafeAreaView,
+	TouchableOpacity,
 	StatusBar
 } from "react-native";
 import { LinearGradient } from "expo";
@@ -13,6 +14,7 @@ import LottieView from "lottie-react-native";
 import * as WeatherData from "../assets/mockData/weatherData";
 import * as Gradients from "../constants/Gradients"
 import moment from "moment-timezone";
+import BottomDrawer from 'rn-bottom-drawer';
 
 export default class WeatherScreen extends React.Component {
 	constructor(props) {
@@ -110,7 +112,7 @@ export default class WeatherScreen extends React.Component {
 				// gradient 8 (sunset)
 				selectedGradient = gradients.between_40_85[8];
 			}
-		} else if (temp < 40 ) {
+		} else if (temp < 40) {
 			console.log("less than 40");
 			// if between sunset and sunrise
 			if (currentTime >= sunrise && currentTime < intervals[1]) {
@@ -149,6 +151,14 @@ export default class WeatherScreen extends React.Component {
 		}
 
 		return selectedGradient;
+	}
+
+	renderContent = () => {
+		return (
+			<View>
+				<Text style={{color: "#fff"}}>Get directions to your location</Text>
+			</View>
+		)
 	}
 
 	render() {
@@ -210,34 +220,40 @@ export default class WeatherScreen extends React.Component {
 						</View>
 					</LinearGradient>
 				</SafeAreaView>
-				{/* <ScrollView horizontal={true} style={{top: 0, backgroundColor: "blue"}}>
+				
+				<BottomDrawer
+					containerHeight={500}
+					offset={0}
+					startUp={false}
+					roundedEdges={false}
+					backgroundColor={"#242424"}
+					shadow={false}
+				>
 					<View
 						style={{
 							flex: 1,
 							flexDirection: "row",
 							justifyContent: "space-between",
-							backgroundColor: "red",
-							top: 100
+							top: 30
 						}}
 					>
 						{next24hours.map(data => {
 							return (
-								<Text
+								<MisterPixel
 									key={data.time}
 									style={{
 										width: 40,
 										height: 39,
-										backgroundColor: "powderblue",
 										textAlign: "center"
 									}}
 								>
-									{Math.round(data.temperature)} {"\n"}
+									{Math.round(data.temperature)}° {"\n"}
 									{moment(moment.unix(data.time)).format("ha")}
-								</Text>
+								</MisterPixel>
 							);
 						})}
 					</View>
-				</ScrollView> */}
+				</BottomDrawer>
 			</View>
 		);
 	}
