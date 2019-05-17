@@ -224,6 +224,53 @@ export default class WeatherScreen extends React.Component {
 		)
 	}
 
+	renderCurrentDetails = () => {
+		return (
+			<View
+				style={{
+					flex: 1,
+					flexDirection: "row",
+					justifyContent: "space-between",
+					alignItems: "stretch"
+				}}
+			>
+			
+				<View style={styles.currentDetails}>
+					<MisterPixel
+						style={{marginBottom: 7}}
+					>
+						Wind
+					</MisterPixel>
+					<MisterPixel>
+						{this.state.weatherData.currently.windSpeed}mph
+					</MisterPixel>
+				</View>
+
+				<View style={styles.currentDetails}>
+					<MisterPixel
+						style={{ marginBottom: 7 }}
+					>
+						Percipitation
+					</MisterPixel>
+					<MisterPixel>
+						{this.state.weatherData.currently.precipProbability}%
+					</MisterPixel>
+				</View>
+
+				<View style={styles.currentDetails}>
+					<MisterPixel
+						style={{ marginBottom: 7 }}
+					>
+						Humidity
+					</MisterPixel>
+					<MisterPixel>
+						{this.state.weatherData.currently.humidity}%
+					</MisterPixel>
+				</View>
+			</View>
+		)
+	}
+
 	render() {
 		const next7days = this.state.weatherData.daily.data;
 
@@ -302,44 +349,8 @@ export default class WeatherScreen extends React.Component {
 							}}>
 
 						{this.renderHourly()}
-						<View
-							style={{
-								flex: 1,
-								flexDirection: "row",
-								justifyContent: "space-between"
-							}}
-						>
-							<MisterPixel
-								style={{
-									width: 91,
-									height: 45,
-									textAlign: "center"
-								}}
-							>
-								Wind {"\n"}
-								{this.state.weatherData.currently.windSpeed}mph
-						</MisterPixel>
-							<MisterPixel
-								style={{
-									width: 91,
-									height: 39,
-									textAlign: "center"
-								}}
-							>
-								Percipitation {"\n"}
-								{this.state.weatherData.currently.precipProbability}%
-						</MisterPixel>
-							<MisterPixel
-								style={{
-									width: 91,
-									height: 39,
-									textAlign: "center"
-								}}
-							>
-								Humidity {"\n"}
-								{this.state.weatherData.currently.humidity}%
-						</MisterPixel>
-						</View>
+						{this.renderCurrentDetails()}
+						
 						<View
 							style={{
 								flex: 1,
@@ -434,5 +445,8 @@ const styles = StyleSheet.create({
 		backgroundColor: "transparent",
 		alignItems: "center",
 		justifyContent: "center"
+	},
+	currentDetails: {
+		height: 40
 	}
 });
