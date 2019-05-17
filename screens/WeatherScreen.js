@@ -315,7 +315,7 @@ export default class WeatherScreen extends React.Component {
 					return (
 						<View 
 							key={index}
-							style={styles.currentDetails}
+							style={{ height: 40 }}
 						>
 							<MisterPixel style={{ marginBottom: 7 }}>
 								{detail.title}
@@ -429,17 +429,8 @@ export default class WeatherScreen extends React.Component {
 
 		return (
 			<View style={{ flex: 1 }}>
-				<StatusBar
-					barStyle={
-						this.getGradient().statusBarStyle
-					}
-				/>
-				<SafeAreaView
-					style={{
-						flex: 0,
-						backgroundColor: this.getGradient().startColor
-					}}
-				/>
+				<StatusBar barStyle={this.getGradient().statusBarStyle} />
+				<SafeAreaView style={{ backgroundColor: this.getGradient().startColor }} />
 					<LinearGradient
 						colors={[
 							this.getGradient().startColor,
@@ -449,7 +440,6 @@ export default class WeatherScreen extends React.Component {
 					>
 						{this.renderKeyDetails()}
 					</LinearGradient>
-				
 				<BottomDrawer
 					containerHeight={600}
 					offset={-65}
@@ -474,20 +464,14 @@ export default class WeatherScreen extends React.Component {
 						{this.renderDailyForecast()}
 					</View>
 				</BottomDrawer>
-
 			</View>
-			
 		);
 	}
 }
 
 const styles = StyleSheet.create({
 	container: {
-		backgroundColor: "transparent",
-		alignItems: "center",
-		justifyContent: "center"
-	},
-	currentDetails: {
-		height: 40
+		flex: 1,
+		alignItems: "center"
 	}
 });
