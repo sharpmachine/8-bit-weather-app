@@ -186,41 +186,46 @@ export default class WeatherScreen extends React.Component {
 		const hourlyForecast = this.state.weatherData.hourly.data.slice(0, 24);
 
 		return (
-			<ScrollView horizontal={true}>
-				<TouchableOpacity
-					style={{
-						flex: 1,
-						flexDirection: "row",
-						justifyContent: "flex-start"
-					}}>
-					{hourlyForecast.map((data, index) => {
-						return (
-							<View
-								key={index}
-								style={{
-									width: 42,
-									height: 39
-								}}>
-								<MisterPixel
+			<View style={{flex: 1}}>
+				<View style={{height: 50}}>
+					<ScrollView 
+						horizontal={true} 
+						showsHorizontalScrollIndicator={false}>
+					<TouchableOpacity
+						activeOpacity={1}
+						style={{
+							flexDirection: "row"
+						}}>
+						{hourlyForecast.map((data, index) => {
+							return (
+								<View
+									key={index}
 									style={{
-										textAlign: "center",
-										marginBottom: 13
-									}}
-								>
-									{Math.round(data.temperature)}°
-								</MisterPixel>
-								<MisterPixel
-									style={{
-										textAlign: "center"
-									}}
-								>
-									{moment(moment.unix(data.time)).format("ha")}
-								</MisterPixel>
-							</View>
-						);
-					})}
-				</TouchableOpacity>
-			</ScrollView>
+										width: 42,
+										height: 40
+									}}>
+									<MisterPixel
+										style={{
+											textAlign: "center",
+											marginBottom: 13
+										}}
+									>
+										{Math.round(data.temperature)}°
+									</MisterPixel>
+									<MisterPixel
+										style={{
+											textAlign: "center"
+										}}
+									>
+										{moment(moment.unix(data.time)).format("ha")}
+									</MisterPixel>
+								</View>
+							);
+						})}
+					</TouchableOpacity>
+				</ScrollView>
+				</View>
+			</View>
 		)
 	}
 
@@ -317,7 +322,7 @@ export default class WeatherScreen extends React.Component {
 						<MisterPixel style={{textAlign: "center"}}>
 							{detail.title} {moment(moment.unix(detail.time)).format("h:mma")}
 						</MisterPixel>
-						
+
 					</View>
 				)
 			})}
@@ -325,9 +330,48 @@ export default class WeatherScreen extends React.Component {
 		)
 	}
 
-	render() {
-		const next7days = this.state.weatherData.daily.data;
+	renderDailyForecast = () => {
+		const dailyForecast = this.state.weatherData.daily.data;
 
+		return (
+			<View
+				style={{
+					flex: 1,
+					flexDirection: "column",
+					justifyContent: "space-between",
+					paddingBottom: 50
+				}}>
+				{dailyForecast.map((data, index) => {
+					return (
+						<View
+							key={index}
+							style={{
+								flex: 1,
+								flexDirection: "row",
+								justifyContent: "space-between"
+							}}>
+							<MisterPixel style={{ width: 80 }}>
+								{moment(moment.unix(data.time)).format("dddd")}
+							</MisterPixel>
+							<MisterPixel style={{ width: 16 }}>
+								{Math.round(data.temperatureLow)}
+							</MisterPixel>
+							<MisterPixel style={{ width: 16 }}>
+								{Math.round(data.temperatureHigh)}
+							</MisterPixel>
+							<LottieView
+								style={{ width: 31 }}
+								source={this.getConditionIcon(data.icon)}
+								autoPlay
+								loop />
+						</View>
+					);
+				})}
+			</View>
+		)
+	}
+
+	render() {
 		return (
 			<View style={{ flex: 1 }}>
 				<StatusBar
@@ -401,52 +445,13 @@ export default class WeatherScreen extends React.Component {
 							paddingHorizontal: 42,
 							paddingVertical: 50
 							}}>
-
 						{this.renderHourly()}
 						{this.renderCurrentDetails()}
 						{this.renderSunriseSunset()}
-
-						<View
-							style={{
-								flex: 1,
-								flexDirection: "column",
-								justifyContent: "space-between",
-								paddingBottom: 50
-							}}>
-							{next7days.map(data => {
-								return (
-									<View
-										key={data.time}
-										style={{
-											flex: 1,
-											flexDirection: "row",
-											justifyContent: "space-between"
-									}}>
-										<MisterPixel style={{width: 80}}>
-											{moment(moment.unix(data.time)).format("dddd")}
-										</MisterPixel>
-										<MisterPixel style={{ width: 16 }}>
-											{Math.round(data.temperatureLow)}
-										</MisterPixel>
-										<MisterPixel style={{ width: 16 }}>
-											{Math.round(data.temperatureHigh)}
-										</MisterPixel>
-										<LottieView 
-											style={{ width: 31 }} 
-											source={this.getConditionIcon(data.icon)} 
-											autoPlay 
-											loop />
-										{/* <MisterPixel style={{ width: 31 }}>
-											{data.icon}
-
-											
-										</MisterPixel> */}
-									</View>
-								);
-							})}
-						</View>
+						{this.renderDailyForecast()}
 					</View>
 				</BottomDrawer>
+
 			</View>
 			
 		);
