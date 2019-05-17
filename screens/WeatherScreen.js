@@ -7,7 +7,8 @@ import {
 	SafeAreaView,
 	TouchableOpacity,
 	StatusBar,
-	Image
+	Image,
+	Dimensions
 } from "react-native";
 import { LinearGradient } from "expo";
 import { MisterPixel } from "../components/StyledText";
@@ -154,14 +155,6 @@ export default class WeatherScreen extends React.Component {
 		return selectedGradient;
 	}
 
-	renderContent = () => {
-		return (
-			<View>
-				<Text style={{color: "#fff"}}>Get directions to your location</Text>
-			</View>
-		)
-	}
-
 	getConditionIcon(icon) {
 		if (icon == "clear-day" || icon == "clear night") {
 			return require("../assets/icons/cloud.json");
@@ -180,6 +173,67 @@ export default class WeatherScreen extends React.Component {
 		} else {
 			return require("../assets/icons/cloud.json")
 		}
+	}
+
+	renderKeyDetails = () => {
+		const details = [
+			{
+				title: "city_name",
+				display: this.state.city,
+				style: { 
+					fontSize: 24, 
+					marginTop: 70, 
+					marginBottom: 7 
+				}
+			},
+			{
+				title: "city_date",
+				display: moment(moment.unix(this.state.weatherData.currently.time)).format("MMMM D") + ", 1988",
+				style: {
+					marginBottom: 187
+				}
+			},
+			{
+				title: "city_current_temp",
+				display: Math.round(this.state.weatherData.currently.temperature) + "°",
+				style: {
+					fontSize: 58, 
+					marginBottom: 7
+				}
+			},
+			{
+				title: "city_current_condition",
+				display: this.state.weatherData.currently.summary,
+				style: {
+					marginBottom: 7
+				}
+			},
+			{
+				title: "city_current_time",
+				display: moment(
+					moment
+						.unix(this.state.weatherData.currently.time)
+						.tz(this.state.weatherData.timezone)
+				)
+					.format("h:mm a"),
+				style: { }
+			}
+		]
+
+		return (
+			<View style={styles.container}>
+				{details.map(detail => {
+					return (
+						<MisterPixel
+							key={detail.title} 
+							style={detail.style}
+						>
+							{detail.display}
+						</MisterPixel>
+					)
+				})}
+			</View>
+		)
 	}
 
 	renderHourly = () => {
@@ -230,7 +284,6 @@ export default class WeatherScreen extends React.Component {
 	}
 
 	renderCurrentDetails = () => {
-
 		const details = [
 			{
 				title: "Wind",
@@ -372,6 +425,8 @@ export default class WeatherScreen extends React.Component {
 	}
 
 	render() {
+		const SCREEN_HEIGHT = Dimensions.get('window').height;
+
 		return (
 			<View style={{ flex: 1 }}>
 				<StatusBar
@@ -392,37 +447,11 @@ export default class WeatherScreen extends React.Component {
 						]}
 						style={{ flex: 1 }}
 					>
-						<View style={styles.container}>
-							<MisterPixel
-								style={{ fontSize: 24, marginTop: 70, marginBottom: 7 }}
-							>
-								{this.state.city}
-							</MisterPixel>
-							<MisterPixel style={{ marginBottom: 187 }}>
-								{moment(moment.unix(this.state.weatherData.currently.time)).format(
-									"MMMM D"
-								)}
-								, 1988
-              </MisterPixel>
-							<MisterPixel style={{ fontSize: 58, marginBottom: 7 }}>
-								{Math.round(this.state.weatherData.currently.temperature)}°
-              </MisterPixel>
-							<MisterPixel style={{ marginBottom: 7 }}>
-								{this.state.weatherData.currently.summary}
-							</MisterPixel>
-							<MisterPixel>
-								{moment(
-									moment
-										.unix(this.state.weatherData.currently.time)
-										.tz(this.state.weatherData.timezone)
-								)
-									.format("h:mm a")}
-							</MisterPixel>
-						</View>
+						{this.renderKeyDetails()}
 					</LinearGradient>
 				
 				<BottomDrawer
-					containerHeight={630}
+					containerHeight={600}
 					offset={-65}
 					startUp={false}
 					roundedEdges={false}
@@ -436,7 +465,6 @@ export default class WeatherScreen extends React.Component {
 							flex: 1,
 							flexDirection: "column",
 							justifyContent: "space-evenly",
-							alignItems: "stretch",
 							paddingHorizontal: 42,
 							paddingVertical: 50
 							}}>
