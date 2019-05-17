@@ -193,14 +193,14 @@ export default class WeatherScreen extends React.Component {
 						flexDirection: "row",
 						justifyContent: "flex-start"
 					}}>
-					{hourlyForecast.map(data => {
+					{hourlyForecast.map((data, index) => {
 						return (
-							<View 
-								key={data.time} 
+							<View
+								key={index}
 								style={{
 									width: 42,
 									height: 39
-							}}>
+								}}>
 								<MisterPixel
 									style={{
 										textAlign: "center",
@@ -208,7 +208,7 @@ export default class WeatherScreen extends React.Component {
 									}}
 								>
 									{Math.round(data.temperature)}°
-							</MisterPixel>
+								</MisterPixel>
 								<MisterPixel
 									style={{
 										textAlign: "center"
@@ -225,6 +225,25 @@ export default class WeatherScreen extends React.Component {
 	}
 
 	renderCurrentDetails = () => {
+
+		const details = [
+			{
+				title: "Wind",
+				data: this.state.weatherData.currently.windSpeed,
+				unit: "mph"
+			},
+			{
+				title: "Percipitation",
+				data: this.state.weatherData.currently.precipProbability,
+				unit: "%"
+			},
+			{
+				title: "Humidity",
+				data: this.state.weatherData.currently.humidity,
+				unit: "%"
+			}
+		]
+
 		return (
 			<View
 				style={{
@@ -234,39 +253,21 @@ export default class WeatherScreen extends React.Component {
 					alignItems: "stretch"
 				}}
 			>
-			
-				<View style={styles.currentDetails}>
-					<MisterPixel
-						style={{marginBottom: 7}}
-					>
-						Wind
-					</MisterPixel>
-					<MisterPixel>
-						{this.state.weatherData.currently.windSpeed}mph
-					</MisterPixel>
-				</View>
-
-				<View style={styles.currentDetails}>
-					<MisterPixel
-						style={{ marginBottom: 7 }}
-					>
-						Percipitation
-					</MisterPixel>
-					<MisterPixel>
-						{this.state.weatherData.currently.precipProbability}%
-					</MisterPixel>
-				</View>
-
-				<View style={styles.currentDetails}>
-					<MisterPixel
-						style={{ marginBottom: 7 }}
-					>
-						Humidity
-					</MisterPixel>
-					<MisterPixel>
-						{this.state.weatherData.currently.humidity}%
-					</MisterPixel>
-				</View>
+				{details.map((detail, index) => {
+					return (
+						<View 
+							key={index}
+							style={styles.currentDetails}
+						>
+							<MisterPixel style={{ marginBottom: 7 }}>
+								{detail.title}
+							</MisterPixel>
+							<MisterPixel>
+								{detail.data}{detail.unit}
+							</MisterPixel>
+						</View>
+					);
+				})}
 			</View>
 		)
 	}
