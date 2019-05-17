@@ -272,6 +272,59 @@ export default class WeatherScreen extends React.Component {
 		)
 	}
 
+	renderSunriseSunset = () => {
+		const details = [
+			{
+				title: "Sunrise",
+				time: this.state.weatherData.daily.data[0].sunriseTime,
+				image: require('../assets/icons/sunrise.png')
+			},
+			{
+				title: "Sunset",
+				time: this.state.weatherData.daily.data[0].sunsetTime,
+				image: require('../assets/icons/sunset.png')
+			}
+		];
+
+		return (
+			<View
+				style={{
+					flex: 1,
+					flexDirection: "row",
+					justifyContent: "space-between",
+					alignItems: "stretch"
+				}}
+			>
+			{details.map((detail, index) => {
+				return(
+					<View
+						key={index}
+						style={{
+							height: 56,
+							justifyContent: 'center',
+							alignItems: 'center',
+						}}>
+
+						<Image
+							style={{ 
+								width: 49, 
+								height: 22.75,
+								marginBottom: 17
+							}}
+							source={detail.image}
+						/>
+
+						<MisterPixel style={{textAlign: "center"}}>
+							{detail.title} {moment(moment.unix(detail.time)).format("h:mma")}
+						</MisterPixel>
+						
+					</View>
+				)
+			})}
+			</View>
+		)
+	}
+
 	render() {
 		const next7days = this.state.weatherData.daily.data;
 
@@ -351,49 +404,8 @@ export default class WeatherScreen extends React.Component {
 
 						{this.renderHourly()}
 						{this.renderCurrentDetails()}
-						
-						<View
-							style={{
-								flex: 1,
-								flexDirection: "row",
-								justifyContent: "space-between"
-							}}
-						>
-							<MisterPixel
-								style={{
-									width: 103,
-									height: 56,
-									textAlign: "center"
-								}}
-							>
-								<Image
-									style={{ width: 49, height: 22.75 }}
-									source={require('../assets/icons/sunrise.png')}
-								/>
-								{"\n"}
-								Sunrise {"\n"}
-								{moment(
-									moment.unix(this.state.weatherData.daily.data[0].sunriseTime)
-								).format("h:mm a")}
-							</MisterPixel>
-							<MisterPixel
-								style={{
-									width: 103,
-									height: 56,
-									textAlign: "center"
-								}}
-							>
-								<Image
-									style={{ width: 49, height: 22.75 }}
-									source={require('../assets/icons/sunset.png')}
-								/>
-								{"\n"}
-								Sunset {"\n"}
-								{moment(
-									moment.unix(this.state.weatherData.daily.data[0].sunsetTime)
-								).format("h:mm a")}
-							</MisterPixel>
-						</View>
+						{this.renderSunriseSunset()}
+
 						<View
 							style={{
 								flex: 1,
