@@ -183,7 +183,7 @@ export default class WeatherScreen extends React.Component {
 				style: { 
 					fontSize: 24, 
 					marginTop: 70, 
-					marginBottom: 7 
+					marginBottom: 8
 				}
 			},
 			{
@@ -198,14 +198,14 @@ export default class WeatherScreen extends React.Component {
 				display: Math.round(this.state.weatherData.currently.temperature) + "°",
 				style: {
 					fontSize: 58, 
-					marginBottom: 7
+					marginBottom: 8
 				}
 			},
 			{
 				title: "city_current_condition",
 				display: this.state.weatherData.currently.summary,
 				style: {
-					marginBottom: 7
+					marginBottom: 8
 				}
 			},
 			{
@@ -255,13 +255,13 @@ export default class WeatherScreen extends React.Component {
 								<View
 									key={index}
 									style={{
-										width: 42,
-										height: 40
+										height: 40,
+										marginRight: 16
 									}}>
 									<MisterPixel
 										style={{
 											textAlign: "center",
-											marginBottom: 13
+											marginBottom: 12
 										}}
 									>
 										{Math.round(data.temperature)}°
@@ -317,7 +317,7 @@ export default class WeatherScreen extends React.Component {
 							key={index}
 							style={{ height: 40 }}
 						>
-							<MisterPixel style={{ marginBottom: 7 }}>
+							<MisterPixel style={{ marginBottom: 8 }}>
 								{detail.title}
 							</MisterPixel>
 							<MisterPixel>
@@ -366,8 +366,8 @@ export default class WeatherScreen extends React.Component {
 						<Image
 							style={{ 
 								width: 49, 
-								height: 22.75,
-								marginBottom: 17
+								height: 30,
+								marginBottom: 16
 							}}
 							source={detail.image}
 						/>
@@ -441,7 +441,7 @@ export default class WeatherScreen extends React.Component {
 						{this.renderKeyDetails()}
 					</LinearGradient>
 				<BottomDrawer
-					containerHeight={600}
+					containerHeight={580}
 					offset={-65}
 					startUp={false}
 					roundedEdges={false}
@@ -455,8 +455,7 @@ export default class WeatherScreen extends React.Component {
 							flex: 1,
 							flexDirection: "column",
 							justifyContent: "space-evenly",
-							paddingHorizontal: 42,
-							paddingVertical: 50
+							padding: 40
 							}}>
 						{this.renderHourly()}
 						{this.renderCurrentDetails()}
