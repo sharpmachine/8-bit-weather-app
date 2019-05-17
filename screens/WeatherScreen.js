@@ -385,12 +385,6 @@ export default class WeatherScreen extends React.Component {
 						backgroundColor: this.getGradient().startColor
 					}}
 				/>
-				<SafeAreaView
-					style={{
-						flex: 1,
-						backgroundColor: this.getGradient().endColor
-					}}
-				>
 					<LinearGradient
 						colors={[
 							this.getGradient().startColor,
@@ -426,12 +420,11 @@ export default class WeatherScreen extends React.Component {
 							</MisterPixel>
 						</View>
 					</LinearGradient>
-				</SafeAreaView>
 				
 				<BottomDrawer
 					containerHeight={630}
-					offset={-50}
-					startUp={true}
+					offset={-65}
+					startUp={false}
 					roundedEdges={false}
 					backgroundColor={"#242424"}
 					shadow={false}
