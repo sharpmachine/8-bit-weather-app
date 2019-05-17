@@ -282,12 +282,12 @@ export default class WeatherScreen extends React.Component {
 			{
 				title: "Sunrise",
 				time: this.state.weatherData.daily.data[0].sunriseTime,
-				image: require('../assets/icons/sunrise.png')
+				image: require('../assets/icons/sunrise2x.png')
 			},
 			{
 				title: "Sunset",
 				time: this.state.weatherData.daily.data[0].sunsetTime,
-				image: require('../assets/icons/sunset.png')
+				image: require('../assets/icons/sunset2x.png')
 			}
 		];
 
@@ -435,6 +435,8 @@ export default class WeatherScreen extends React.Component {
 					roundedEdges={false}
 					backgroundColor={"#242424"}
 					shadow={false}
+					onExpanded={() => { console.log('expanded') }}
+					onCollapsed={() => { console.log('collapsed') }}
 				>
 					<View 
 						style={{
