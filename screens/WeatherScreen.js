@@ -1,14 +1,12 @@
 import React from 'react';
 import {
 	StyleSheet,
-	Text,
 	View,
 	ScrollView,
 	SafeAreaView,
 	TouchableOpacity,
 	StatusBar,
-	Image,
-	Dimensions
+	Image
 } from "react-native";
 import { LinearGradient } from "expo";
 import { MisterPixel } from "../components/StyledText";
@@ -256,21 +254,19 @@ export default class WeatherScreen extends React.Component {
 									key={index}
 									style={{
 										height: 40,
-										marginRight: 16
+										marginRight: 20
 									}}>
 									<MisterPixel
 										style={{
 											textAlign: "center",
 											marginBottom: 12
-										}}
-									>
+										}}>
 										{Math.round(data.temperature)}°
 									</MisterPixel>
 									<MisterPixel
 										style={{
 											textAlign: "center"
-										}}
-									>
+										}}>
 										{moment(moment.unix(data.time)).format("ha")}
 									</MisterPixel>
 								</View>
@@ -384,39 +380,65 @@ export default class WeatherScreen extends React.Component {
 	}
 
 	renderDailyForecast = () => {
-		const dailyForecast = this.state.weatherData.daily.data;
+		const dailyForecast = this.state.weatherData.daily.data.slice(0, 5);
 
 		return (
 			<View
 				style={{
-					flex: 1,
-					flexDirection: "column",
-					justifyContent: "space-between",
-					paddingBottom: 50
+					flex: 0
 				}}>
 				{dailyForecast.map((data, index) => {
 					return (
 						<View
 							key={index}
 							style={{
-								flex: 1,
+								flex: 0,
 								flexDirection: "row",
-								justifyContent: "space-between"
-							}}>
-							<MisterPixel style={{ width: 80 }}>
-								{moment(moment.unix(data.time)).format("dddd")}
-							</MisterPixel>
-							<MisterPixel style={{ width: 16 }}>
-								{Math.round(data.temperatureLow)}
-							</MisterPixel>
-							<MisterPixel style={{ width: 16 }}>
-								{Math.round(data.temperatureHigh)}
-							</MisterPixel>
-							<LottieView
-								style={{ width: 31 }}
-								source={this.getConditionIcon(data.icon)}
-								autoPlay
-								loop />
+								alignItems: "center",
+								marginBottom: 20
+						}}>
+							<View
+								style={{
+									flex: 1,
+									flexDirection: "row",
+									flexGrow: 1
+								}}>
+								<MisterPixel style={{ 
+									flexGrow: 1,
+									width: 78
+									}}>
+									{moment(moment.unix(data.time)).format("dddd")}
+								</MisterPixel>
+							</View>
+
+							<View
+								style={{
+									flexDirection: "row",
+									alignItems: "center",
+								}}>
+
+								<MisterPixel 
+									style={{
+										width: 22 + 16,
+										textAlign: "left",
+								}}>
+									{Math.round(data.temperatureLow)}°
+								</MisterPixel>
+								<MisterPixel 
+									style={{
+										width: 22 + 16,
+										textAlign: "left",
+								}}>
+									{Math.round(data.temperatureHigh)}°
+								</MisterPixel>
+								<LottieView
+									style={{
+										width: 31
+									}}
+									source={this.getConditionIcon(data.icon)}
+									autoPlay
+									loop />
+							</View>
 						</View>
 					);
 				})}
@@ -425,8 +447,6 @@ export default class WeatherScreen extends React.Component {
 	}
 
 	render() {
-		const SCREEN_HEIGHT = Dimensions.get('window').height;
-
 		return (
 			<View style={{ flex: 1 }}>
 				<StatusBar barStyle={this.getGradient().statusBarStyle} />
@@ -436,27 +456,23 @@ export default class WeatherScreen extends React.Component {
 							this.getGradient().startColor,
 							this.getGradient().endColor
 						]}
-						style={{ flex: 1 }}
-					>
+						style={{ flex: 1 }}>
 						{this.renderKeyDetails()}
 					</LinearGradient>
 				<BottomDrawer
 					containerHeight={580}
-					offset={-65}
 					startUp={false}
 					roundedEdges={false}
+					downDisplay={580 - 120}
 					backgroundColor={"#242424"}
 					shadow={false}
 					onExpanded={() => { console.log('expanded') }}
-					onCollapsed={() => { console.log('collapsed') }}
-				>
+					onCollapsed={() => { console.log('collapsed') }}>
 					<View 
 						style={{
 							flex: 1,
-							flexDirection: "column",
-							justifyContent: "space-evenly",
 							padding: 40
-							}}>
+						}}>
 						{this.renderHourly()}
 						{this.renderCurrentDetails()}
 						{this.renderSunriseSunset()}
