@@ -60,7 +60,6 @@ export default class HomeScreen extends React.Component {
 		)
 			.then(response => response.json())
 			.then(responseJson => {
-				console.log('coords API called');
 				this.setState({
 					lat: responseJson.results[0].geometry.lat,
 					lng: responseJson.results[0].geometry.lng,
@@ -80,7 +79,6 @@ export default class HomeScreen extends React.Component {
 		)
 			.then(response => response.json())
 			.then(responseJson => {
-				console.log("weather API called");
 				this.setState({
 					weatherData: responseJson
 				})
