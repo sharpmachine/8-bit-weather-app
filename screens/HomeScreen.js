@@ -5,6 +5,7 @@ import {
 	TextInput,
 	TouchableOpacity,
 } from "react-native";
+import * as ApiKeys from "../config";
 import { MisterPixel } from "../components/StyledText";
 import LottieView from "lottie-react-native";
 
@@ -52,8 +53,7 @@ export default class HomeScreen extends React.Component {
 	}
 
 	getCoords() {
-		// should be stored in an .env file, but I live dangerously
-		const apiKey = 'bba00951986840b0838be4158db370b8';
+		const apiKey = ApiKeys.API_KEYS.opencage;
 
 		return fetch(
 			`https://api.opencagedata.com/geocode/v1/json?key=${apiKey}&q=${this.state.text}`
@@ -73,8 +73,7 @@ export default class HomeScreen extends React.Component {
 	}
 
 	getWeather(lat, lng) {
-		// should be stored in an .env file, but I live dangerously
-		const apiKey = '3bd0a54365796fc1a01468fc9834a2b3';
+		const apiKey = ApiKeys.API_KEYS.darkSky;
 
 		return fetch(
 			`https://api.darksky.net/forecast/${apiKey}/${lat},${lng}`
