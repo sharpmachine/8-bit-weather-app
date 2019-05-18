@@ -1,6 +1,5 @@
 import React from 'react';
 import {
-	StyleSheet,
 	View,
 	ScrollView,
 	SafeAreaView,
@@ -468,19 +467,8 @@ export default class WeatherScreen extends React.Component {
 					roundedEdges={false}
 					downDisplay={580 - 120}
 					backgroundColor={"#242424"}
-					shadow={false}
-					onExpanded={() => { 
-						console.log('expanded') 
-					}}
-					onCollapsed={() => { console.log('collapsed') }}>
+					shadow={false}>
 					<View 
-						onResponderMove={event => {
-							const layout = event.nativeEvent.layout;
-							console.log('height:', layout.height);
-							console.log('width:', layout.width);
-							console.log('x:', layout.x);
-							console.log('y:', layout.y);
-						}}
 						style={{
 							flex: 1,
 							padding: 40
