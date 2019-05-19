@@ -397,7 +397,7 @@ export default class WeatherScreen extends React.Component {
 								flex: 0,
 								flexDirection: "row",
 								alignItems: "center",
-								marginBottom: 20
+								marginTop: 20
 						}}>
 							<View
 								style={{
