@@ -212,6 +212,13 @@ export default class WeatherScreen extends React.Component {
 				}
 			},
 			{
+				title: "city_high_low",
+				display: `High: ${Math.round(this.state.weatherData.daily.data[0].temperatureHigh)}°  Low: ${Math.round(this.state.weatherData.daily.data[0].temperatureLow)}°`,
+				style: {
+					marginBottom: 8
+				}
+			},
+			{
 				title: "city_current_condition",
 				display: this.state.weatherData.currently.summary,
 				style: {
@@ -255,6 +262,13 @@ export default class WeatherScreen extends React.Component {
 							</MisterPixel>
 						)
 					})}
+					<LottieView
+						style={{
+							width: 31
+						}}
+						source={this.getConditionIcon(this.state.weatherData.currently.icon)}
+						autoPlay
+						loop />
 				</View>
 			</View>
 		)
