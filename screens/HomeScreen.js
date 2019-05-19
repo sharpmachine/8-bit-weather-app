@@ -116,15 +116,11 @@ export default class HomeScreen extends React.Component {
 				) : null}
 
 				{this.state.isFetchingData ? (
-					<View>
-						{/* <LottieView source={require('../assets/icons/loading.json')} autoPlay loop /> */}
-						<MisterPixel style={[styles.loadingState, { fontSize: 24, marginBottom: 9 }]}>
-							Loading…
-        		</MisterPixel>
-						<MisterPixel style={styles.loadingState}>
-							Do not turn off the power
-        		</MisterPixel>
-					</View>
+					<LottieView
+						style={{ width: 190 }}
+						source={require('../assets/icons/loading.json')}
+						autoPlay
+						loop />
 				) : null}
 			</View>
 		);
