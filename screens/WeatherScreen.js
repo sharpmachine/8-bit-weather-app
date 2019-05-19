@@ -280,7 +280,7 @@ export default class WeatherScreen extends React.Component {
 									key={index}
 									style={{
 										height: 40,
-										marginRight: 20
+										marginRight: 16
 									}}>
 									<MisterPixel
 										style={{
