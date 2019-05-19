@@ -290,12 +290,12 @@ export default class WeatherScreen extends React.Component {
 			},
 			{
 				title: "Percipitation",
-				data: this.state.weatherData.currently.precipProbability,
+				data: this.state.weatherData.currently.precipProbability * 100,
 				unit: "%"
 			},
 			{
 				title: "Humidity",
-				data: this.state.weatherData.currently.humidity,
+				data: this.state.weatherData.currently.humidity * 100,
 				unit: "%"
 			}
 		]
@@ -463,8 +463,8 @@ export default class WeatherScreen extends React.Component {
 					</LinearGradient>
 				<BottomDrawer
 					containerHeight={580}
-					startUp={false}
-					roundedEdges={false}
+					startUp={true}
+					roundedEdges={true}
 					downDisplay={580 - 120}
 					backgroundColor={"#242424"}
 					shadow={false}>
