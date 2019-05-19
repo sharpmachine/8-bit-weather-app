@@ -4,10 +4,13 @@ import {
 	View,
 	TextInput,
 	TouchableOpacity,
+	Dimensions
 } from "react-native";
 import * as ApiKeys from "../config";
 import { MisterPixel } from "../components/StyledText";
 import LottieView from "lottie-react-native";
+
+const SCREEN_WIDTH = Dimensions.get('window').width;
 
 export default class HomeScreen extends React.Component {
 	constructor(props) {
@@ -137,7 +140,8 @@ const styles = StyleSheet.create({
 		opacity: 0.8
 	},
 	searchInput: {
-		width: 368,
+		width: SCREEN_WIDTH - 80,
+		maxWidth: 368,
 		height: 60,
 		padding: 15,
 		borderWidth: 3,
