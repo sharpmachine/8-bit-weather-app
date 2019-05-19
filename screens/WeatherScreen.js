@@ -406,7 +406,7 @@ export default class WeatherScreen extends React.Component {
 	}
 
 	renderDailyForecast = () => {
-		const dailyForecast = this.state.weatherData.daily.data.slice(0, 5);
+		const dailyForecast = this.state.weatherData.daily.data.slice(1, 6);
 
 		return (
 			<View
