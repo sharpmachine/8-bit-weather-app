@@ -154,21 +154,21 @@ export default class WeatherScreen extends React.Component {
 
 	getConditionIcon(icon) {
 		if (icon == "clear-day" || icon == "clear night") {
-			return require("../assets/icons/cloud.json");
+			return require("../assets/icons/clear-day.json");
 		} else if (icon == "rain") {
 			return require("../assets/icons/rain.json");
 		} else if (icon == "snow" || icon == "sleet") {
 			return require("../assets/icons/snow.json");
 		} else if (icon == "cloudy") {
-			return require("../assets/icons/cloud.json");
+			return require("../assets/icons/cloudy.json");
 		} else if (icon == "partly-cloudy-day" || icon == "partly-cloudy-night") {
-			return require("../assets/icons/partly.json");
+			return require("../assets/icons/partly-cloudy-day.json");
 		} else if (icon == "wind") {
 			return require("../assets/icons/wind.json");
 		} else if (icon == "fog") {
 			return require("../assets/icons/fog.json");
 		} else {
-			return require("../assets/icons/cloud.json")
+			return require("../assets/icons/cloudy.json")
 		}
 	}
 
