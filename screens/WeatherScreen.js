@@ -184,22 +184,27 @@ export default class WeatherScreen extends React.Component {
 				}
 			},
 			{
-				title: "city_date",
-				display: moment(moment.unix(this.state.weatherData.currently.time)).format("MMMM D") + ", 1988",
-				style: {
-					marginBottom: 8
-				}
-			},
-			{
-				title: "city_current_time",
-				display: moment(
+				title: "city_date_time",
+				display: `${moment(
 					moment
 						.unix(this.state.weatherData.currently.time)
 						.tz(this.state.weatherData.timezone)
 				)
-					.format("h:mma"),
-				style: {}
-			}
+					.format("h:mma  MMMM D")}, 1988`,
+				style: {
+					marginBottom: 8
+				}
+			},
+			// {
+			// 	title: "city_current_time",
+			// 	display: moment(
+			// 		moment
+			// 			.unix(this.state.weatherData.currently.time)
+			// 			.tz(this.state.weatherData.timezone)
+			// 	)
+			// 		.format("h:mma"),
+			// 	style: {}
+			// }
 		]
 
 		const centerDetails = [
@@ -208,7 +213,8 @@ export default class WeatherScreen extends React.Component {
 				display: Math.round(this.state.weatherData.currently.temperature) + "°",
 				style: {
 					fontSize: 58,
-					marginBottom: 8
+					marginBottom: 8,
+					left: 15 / 2
 				}
 			},
 			{
@@ -222,7 +228,7 @@ export default class WeatherScreen extends React.Component {
 				title: "city_current_condition",
 				display: this.state.weatherData.currently.summary,
 				style: {
-					marginBottom: 8
+					marginBottom: 16
 				}
 			}
 		]
