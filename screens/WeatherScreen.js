@@ -215,7 +215,7 @@ export default class WeatherScreen extends React.Component {
 						.unix(this.state.weatherData.currently.time)
 						.tz(this.state.weatherData.timezone)
 				)
-					.format("h:mm a"),
+					.format("h:mma"),
 				style: {}
 			}
 		]
