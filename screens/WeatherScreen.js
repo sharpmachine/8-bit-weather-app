@@ -187,8 +187,18 @@ export default class WeatherScreen extends React.Component {
 				title: "city_date",
 				display: moment(moment.unix(this.state.weatherData.currently.time)).format("MMMM D") + ", 1988",
 				style: {
-					// marginBottom: 187
+					marginBottom: 8
 				}
+			},
+			{
+				title: "city_current_time",
+				display: moment(
+					moment
+						.unix(this.state.weatherData.currently.time)
+						.tz(this.state.weatherData.timezone)
+				)
+					.format("h:mma"),
+				style: {}
 			}
 		]
 
@@ -207,16 +217,6 @@ export default class WeatherScreen extends React.Component {
 				style: {
 					marginBottom: 8
 				}
-			},
-			{
-				title: "city_current_time",
-				display: moment(
-					moment
-						.unix(this.state.weatherData.currently.time)
-						.tz(this.state.weatherData.timezone)
-				)
-					.format("h:mma"),
-				style: {}
 			}
 		]
 
