@@ -173,13 +173,13 @@ export default class WeatherScreen extends React.Component {
 	}
 
 	renderKeyDetails = () => {
-		const details = [
+		const topDetails = [
 			{
 				title: "city_name",
 				display: this.state.city,
 				style: { 
 					fontSize: 24, 
-					marginTop: 70, 
+					marginTop: 60, 
 					marginBottom: 8
 				}
 			},
@@ -187,14 +187,17 @@ export default class WeatherScreen extends React.Component {
 				title: "city_date",
 				display: moment(moment.unix(this.state.weatherData.currently.time)).format("MMMM D") + ", 1988",
 				style: {
-					marginBottom: 187
+					// marginBottom: 187
 				}
-			},
+			}
+		]
+
+		const centerDetails = [
 			{
 				title: "city_current_temp",
 				display: Math.round(this.state.weatherData.currently.temperature) + "°",
 				style: {
-					fontSize: 58, 
+					fontSize: 58,
 					marginBottom: 8
 				}
 			},
@@ -213,25 +216,46 @@ export default class WeatherScreen extends React.Component {
 						.tz(this.state.weatherData.timezone)
 				)
 					.format("h:mm a"),
-				style: { }
+				style: {}
 			}
 		]
 
 		return (
 			<View style={{
-				flex: 1,
-				alignItems: "center",
+				flex: 1
 			}}>
-				{details.map(detail => {
-					return (
-						<MisterPixel
-							key={detail.title} 
-							style={detail.style}
-						>
-							{detail.display}
-						</MisterPixel>
-					)
-				})}
+				<View style={{
+					flex: 1,
+					alignItems: "center",
+				}}>
+					{topDetails.map(detail => {
+						return (
+							<MisterPixel
+								key={detail.title} 
+								style={detail.style}
+							>
+								{detail.display}
+							</MisterPixel>
+						)
+					})}
+				</View>
+				<View style={{
+					flex: 1,
+					justifyContent: "center",
+					alignItems: "center",
+					top: -200
+				}}>
+					{centerDetails.map(detail => {
+						return (
+							<MisterPixel
+								key={detail.title}
+								style={detail.style}
+							>
+								{detail.display}
+							</MisterPixel>
+						)
+					})}
+				</View>
 			</View>
 		)
 	}
