@@ -329,17 +329,17 @@ export default class WeatherScreen extends React.Component {
 		const details = [
 			{
 				title: "Wind",
-				data: this.state.weatherData.currently.windSpeed,
+				data: Math.round(this.state.weatherData.currently.windSpeed),
 				unit: "mph"
 			},
 			{
 				title: "Percipitation",
-				data: this.state.weatherData.currently.precipProbability * 100,
+				data: Math.round(this.state.weatherData.currently.precipProbability * 100),
 				unit: "%"
 			},
 			{
 				title: "Humidity",
-				data: this.state.weatherData.currently.humidity * 100,
+				data: Math.round(this.state.weatherData.currently.humidity * 100),
 				unit: "%"
 			}
 		]
