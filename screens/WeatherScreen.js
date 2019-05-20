@@ -335,7 +335,7 @@ export default class WeatherScreen extends React.Component {
 			{
 				title: "Percipitation",
 				data: Math.round(this.state.weatherData.currently.precipProbability * 100),
-				unit: "%"
+				unit: "% chance"
 			},
 			{
 				title: "Humidity",
