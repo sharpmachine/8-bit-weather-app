@@ -417,7 +417,11 @@ export default class WeatherScreen extends React.Component {
 						/>
 
 						<MisterPixel style={{textAlign: "center"}}>
-							{detail.title} {moment(moment.unix(detail.time)).format("h:mma")}
+							{detail.title} {moment(
+								moment
+									.unix(detail.time)
+									.tz(this.state.weatherData.timezone)
+									).format("h:mma")}
 						</MisterPixel>
 
 					</View>
