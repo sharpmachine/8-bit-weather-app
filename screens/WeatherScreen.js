@@ -281,9 +281,9 @@ export default class WeatherScreen extends React.Component {
 	}
 
 	renderHourly = () => {
-		const now = new Date();
-		const hoursLeftInDay = 23 - now.getHours();
-		const hourlyForecast = this.state.weatherData.hourly.data.slice(0, hoursLeftInDay + 6);
+		const now = moment().tz(this.state.weatherData.timezone);
+		const hoursLeftInDay = 23 - now.hours();
+		const hourlyForecast = this.state.weatherData.hourly.data.slice(0, hoursLeftInDay + 8);
 
 		return (
 			<View style={{flex: 1}}>
@@ -315,7 +315,7 @@ export default class WeatherScreen extends React.Component {
 										style={{
 											textAlign: "center"
 										}}>
-										{moment(moment.unix(data.time)).format("ha")}
+										{moment(moment.unix(data.time).tz(this.state.weatherData.timezone)).format("ha")}
 									</MisterPixel>
 								</View>
 							);
