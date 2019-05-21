@@ -42,9 +42,9 @@ export default class App extends React.Component {
 
 const MainNavigator = createStackNavigator(
   {
-    Home: { screen: HomeScreen },
+    // Home: { screen: HomeScreen },
     Weather: WeatherScreen,
-    // Home: { screen: HomeScreen }
+    Home: { screen: HomeScreen }
   },
   {
     headerMode: "none"

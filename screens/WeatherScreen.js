@@ -281,7 +281,9 @@ export default class WeatherScreen extends React.Component {
 	}
 
 	renderHourly = () => {
-		const hourlyForecast = this.state.weatherData.hourly.data.slice(0, 24);
+		const now = new Date();
+		const hoursLeftInDay = 23 - now.getHours();
+		const hourlyForecast = this.state.weatherData.hourly.data.slice(0, hoursLeftInDay + 6);
 
 		return (
 			<View style={{flex: 1}}>
