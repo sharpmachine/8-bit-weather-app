@@ -473,6 +473,7 @@ export default class WeatherScreen extends React.Component {
 									style={{
 										width: 22 + 16,
 										textAlign: "left",
+										color: "#7C7C7C"
 								}}>
 									{Math.round(data.temperatureLow)}°
 								</MisterPixel>
@@ -513,7 +514,7 @@ export default class WeatherScreen extends React.Component {
 					</LinearGradient>
 				<BottomDrawer
 					containerHeight={580}
-					startUp={false}
+					startUp={true}
 					roundedEdges={true}
 					downDisplay={580 - 120}
 					backgroundColor={"#242424"}
