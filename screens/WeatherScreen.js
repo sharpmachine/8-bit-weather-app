@@ -10,7 +10,7 @@ import {
 import { LinearGradient } from "expo";
 import { MisterPixel } from "../components/StyledText";
 import LottieView from "lottie-react-native";
-import * as WeatherData from "../assets/mockData/weatherData";
+import * as WeatherData from "../constants/MockWeatherData";
 import * as Gradients from "../constants/Gradients"
 import moment from "moment-timezone";
 import BottomDrawer from 'rn-bottom-drawer';
