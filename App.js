@@ -2,7 +2,7 @@ import React from "react";
 import { Font, AppLoading } from "expo";
 import { createStackNavigator, createAppContainer } from "react-navigation";
 import WeatherScreen from "./screens/WeatherScreen";
-import HomeScreen from "./screens/HomeScreen";
+import SearchScreen from "./screens/SearchScreen";
 
 export default class App extends React.Component {
   state = {
@@ -42,9 +42,9 @@ export default class App extends React.Component {
 
 const MainNavigator = createStackNavigator(
   {
-    // Home: { screen: HomeScreen },
+    // Search: { screen: SearchScreen },
     Weather: WeatherScreen,
-    Home: { screen: HomeScreen }
+    Search: { screen: SearchScreen }
   },
   {
     headerMode: "none"

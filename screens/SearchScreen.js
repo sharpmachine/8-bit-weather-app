@@ -12,7 +12,7 @@ import LottieView from "lottie-react-native";
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
 
-export default class HomeScreen extends React.Component {
+export default class SearchScreen extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {

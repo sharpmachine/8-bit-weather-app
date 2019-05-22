@@ -514,7 +514,7 @@ export default class WeatherScreen extends React.Component {
 					</LinearGradient>
 				<BottomDrawer
 					containerHeight={580}
-					startUp={true}
+					startUp={false}
 					roundedEdges={true}
 					downDisplay={580 - 120}
 					backgroundColor={"#242424"}
