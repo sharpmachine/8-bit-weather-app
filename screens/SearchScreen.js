@@ -39,7 +39,8 @@ export default class SearchScreen extends React.Component {
 						// navigate to weather info screen
 						this.props.navigation.navigate("Weather", {
 							weatherData: this.state.weatherData,
-							city: this.state.city
+							city: this.state.city,
+							wasNavigatedTo: true
 						});
 						// reset states when navigating completes
 						this.props.navigation.addListener(

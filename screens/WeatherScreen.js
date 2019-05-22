@@ -5,23 +5,103 @@ import {
 	SafeAreaView,
 	TouchableOpacity,
 	StatusBar,
-	Image
+	Image,
+	Button
 } from "react-native";
-import { LinearGradient } from "expo";
+import { LinearGradient, Constants, Location, Permissions } from "expo";
 import { MisterPixel } from "../components/StyledText";
 import LottieView from "lottie-react-native";
 import * as WeatherData from "../constants/MockWeatherData";
 import * as Gradients from "../constants/Gradients"
 import moment from "moment-timezone";
 import BottomDrawer from 'rn-bottom-drawer';
+import * as ApiKeys from "../config";
+import { NavigationEvents } from 'react-navigation';
 
 export default class WeatherScreen extends React.Component {
 	constructor(props) {
 		super(props);
 		const { navigation } = this.props;
 		this.state = {
-			weatherData: navigation.getParam('weatherData', WeatherData.WEATHER_DATA[0]),
-			city: navigation.getParam('city', 'Seattle')
+			weatherData: null,
+			city: null,
+			location: null,
+			errorMessage: null,
+			isFetchingData: true
+		}
+	}
+
+	componentWillMount() {
+		if (Platform.OS === 'android' && !Constants.isDevice) {
+			this.setState({
+				errorMessage: 'Oops, this will not work on Sketch in an Android emulator. Try it on your device!',
+			});
+		} else {
+			this._getLocationAsync();
+		}
+	}
+
+	searchedWeather(payload) {
+		console.log('will focus')
+		console.log(!!payload.lastState)
+		const { navigation } = this.props;
+		if (!!payload.lastState) {
+			this.setState({ 
+				weatherData: navigation.getParam('weatherData', WeatherData.WEATHER_DATA[0]), 
+				city: navigation.getParam('city', "Seattle")
+			})	
+		}
+	
+	}
+
+	getLocationName() {
+		const apiKey = ApiKeys.API_KEYS.opencage;
+
+		return fetch(
+			`https://api.opencagedata.com/geocode/v1/json?key=${apiKey}&q=${this.state.location.coords.latitude}%2C${this.state.location.coords.longitude}`
+		)
+			.then(response => response.json())
+			.then(responseJson => {
+				this.setState({
+					city: responseJson.results[0].components.city
+				});
+			})
+			.catch(error => {
+				console.error(error);
+			});
+	}
+
+	_getLocationAsync = async () => {
+		let { status } = await Permissions.askAsync(Permissions.LOCATION);
+		if (status !== 'granted') {
+			this.setState({
+				errorMessage: 'Permission to access location was denied',
+			});
+		}
+
+		let location = await Location.getCurrentPositionAsync({});
+		this.setState({ location }, () => {
+			this.getLocationName();
+			setTimeout(() => {
+				this.getWeather(location.coords.latitude, location.coords.longitude).then(() => {
+					this.setState({ isFetchingData: false })
+				})
+			}, 1000)
+		});
+	};
+
+	async getWeather(lat, lng) {
+		const apiKey = ApiKeys.API_KEYS.darkSky;
+
+		try {
+			const response = await fetch(`https://api.darksky.net/forecast/${apiKey}/${lat},${lng}`);
+			const responseJson = await response.json();
+			this.setState({
+				weatherData: responseJson
+			});
+		}
+		catch (error) {
+			console.error(error);
 		}
 	}
 
@@ -190,21 +270,11 @@ export default class WeatherScreen extends React.Component {
 						.unix(this.state.weatherData.currently.time)
 						.tz(this.state.weatherData.timezone)
 				)
-					.format("h:mma  MMMM D")}, 1988`,
+					.format("h:mma  MMMM D, YYYY")}`,
 				style: {
 					marginBottom: 8
 				}
-			},
-			// {
-			// 	title: "city_current_time",
-			// 	display: moment(
-			// 		moment
-			// 			.unix(this.state.weatherData.currently.time)
-			// 			.tz(this.state.weatherData.timezone)
-			// 	)
-			// 		.format("h:mma"),
-			// 	style: {}
-			// }
+			}
 		]
 
 		const centerDetails = [
@@ -502,6 +572,26 @@ export default class WeatherScreen extends React.Component {
 	render() {
 		return (
 			<View style={{ flex: 1 }}>
+				<NavigationEvents
+					onWillFocus={payload => this.searchedWeather(payload)}
+					onDidFocus={payload => console.log('did focus')}
+				/>
+				{this.state.isFetchingData ? (
+					<View style={{
+						flex: 1,
+						alignItems: "center",
+						justifyContent: "center"
+					}}>
+					<LottieView
+						style={{ width: 190 }}
+						source={require('../assets/icons/loading.json')}
+						autoPlay
+						loop />
+					</View>
+				) : null}
+
+				{!this.state.isFetchingData ? (
+					<View style={{ flex: 1 }}>
 				<StatusBar barStyle={this.getGradient().statusBarStyle} />
 				<SafeAreaView style={{ backgroundColor: this.getGradient().startColor }} />
 					<LinearGradient
@@ -510,6 +600,7 @@ export default class WeatherScreen extends React.Component {
 							this.getGradient().endColor
 						]}
 						style={{ flex: 1 }}>
+							<Button onPress={() => this.props.navigation.navigate("Search")} title="Search" />
 						{this.renderKeyDetails()}
 					</LinearGradient>
 				<BottomDrawer
@@ -530,6 +621,8 @@ export default class WeatherScreen extends React.Component {
 						{this.renderDailyForecast()}
 					</View>
 				</BottomDrawer>
+					</View>
+				) : null}
 			</View>
 		);
 	}

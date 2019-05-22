@@ -44,7 +44,7 @@ const MainNavigator = createStackNavigator(
   {
     // Search: { screen: SearchScreen },
     Weather: WeatherScreen,
-    Search: { screen: SearchScreen }
+    Search:  SearchScreen
   },
   {
     headerMode: "none"
