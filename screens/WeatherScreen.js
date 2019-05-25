@@ -8,20 +8,19 @@ import {
 	Image,
 	Button
 } from "react-native";
-import { LinearGradient, Constants, Location, Permissions } from "expo";
+import { NavigationEvents } from 'react-navigation';
+import { LinearGradient, Constants } from "expo";
 import { MisterPixel } from "../components/StyledText";
 import LottieView from "lottie-react-native";
-import * as WeatherData from "../constants/MockWeatherData";
-import * as Gradients from "../constants/Gradients"
 import moment from "moment-timezone";
 import BottomDrawer from 'rn-bottom-drawer';
-import * as ApiKeys from "../config";
-import { NavigationEvents } from 'react-navigation';
+import Fetch from "../constants/APIs";
+import * as WeatherData from "../constants/MockWeatherData";
+import * as Gradients from "../constants/Gradients"
 
 export default class WeatherScreen extends React.Component {
 	constructor(props) {
 		super(props);
-		const { navigation } = this.props;
 		this.state = {
 			weatherData: null,
 			city: null,
@@ -37,71 +36,52 @@ export default class WeatherScreen extends React.Component {
 				errorMessage: 'Oops, this will not work on Sketch in an Android emulator. Try it on your device!',
 			});
 		} else {
-			this._getLocationAsync();
+			this.getCurrentLocation();
 		}
-	}
-
-	searchedWeather(payload) {
-		console.log('will focus')
-		console.log(!!payload.lastState)
-		const { navigation } = this.props;
-		if (!!payload.lastState) {
-			this.setState({ 
-				weatherData: navigation.getParam('weatherData', WeatherData.WEATHER_DATA[0]), 
-				city: navigation.getParam('city', "Seattle")
-			})	
-		}
-	
 	}
 
 	getLocationName() {
-		const apiKey = ApiKeys.API_KEYS.opencage;
-
-		return fetch(
-			`https://api.opencagedata.com/geocode/v1/json?key=${apiKey}&q=${this.state.location.coords.latitude}%2C${this.state.location.coords.longitude}`
-		)
-			.then(response => response.json())
-			.then(responseJson => {
+		return Fetch.locationName(
+			this.state.location.coords.latitude,
+			this.state.location.coords.longitude
+		).then(responseJson => {
 				this.setState({
 					city: responseJson.results[0].components.city
 				});
 			})
-			.catch(error => {
-				console.error(error);
-			});
 	}
 
-	_getLocationAsync = async () => {
-		let { status } = await Permissions.askAsync(Permissions.LOCATION);
-		if (status !== 'granted') {
-			this.setState({
-				errorMessage: 'Permission to access location was denied',
-			});
-		}
-
-		let location = await Location.getCurrentPositionAsync({});
-		this.setState({ location }, () => {
-			this.getLocationName();
-			setTimeout(() => {
-				this.getWeather(location.coords.latitude, location.coords.longitude).then(() => {
-					this.setState({ isFetchingData: false })
-				})
-			}, 1000)
+	getCurrentLocation() {
+		return Fetch.currentLocation()
+			.then((location) => {
+				this.setState({ location }, () => {
+					this.getLocationName();
+					setTimeout(() => {
+						this.getWeather(location.coords.latitude, location.coords.longitude).then(() => {
+							this.setState({ isFetchingData: false })
+						})
+					}, 1000)
+				});
 		});
 	};
 
-	async getWeather(lat, lng) {
-		const apiKey = ApiKeys.API_KEYS.darkSky;
-
-		try {
-			const response = await fetch(`https://api.darksky.net/forecast/${apiKey}/${lat},${lng}`);
-			const responseJson = await response.json();
-			this.setState({
-				weatherData: responseJson
+	getWeather(lat, lng) {
+		return Fetch.weather(lat, lng)
+			.then(weatherData => {
+				this.setState({
+					weatherData: weatherData
+				})
 			});
-		}
-		catch (error) {
-			console.error(error);
+	}
+
+	getQueriedLocationWeather(weatherData) {
+		const { navigation } = this.props;
+
+		if (!!weatherData.lastState) {
+			this.setState({
+				weatherData: navigation.getParam('weatherData', WeatherData.WEATHER_DATA[0]),
+				city: navigation.getParam('city', "Seattle")
+			})
 		}
 	}
 
@@ -573,8 +553,7 @@ export default class WeatherScreen extends React.Component {
 		return (
 			<View style={{ flex: 1 }}>
 				<NavigationEvents
-					onWillFocus={payload => this.searchedWeather(payload)}
-					onDidFocus={payload => console.log('did focus')}
+					onWillFocus={payload => this.getQueriedLocationWeather(weatherData)}
 				/>
 				{this.state.isFetchingData ? (
 					<View style={{

@@ -42,7 +42,6 @@ export default class App extends React.Component {
 
 const MainNavigator = createStackNavigator(
   {
-    // Search: { screen: SearchScreen },
     Weather: WeatherScreen,
     Search:  SearchScreen
   },

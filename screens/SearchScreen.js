@@ -6,9 +6,9 @@ import {
 	TouchableOpacity,
 	Dimensions
 } from "react-native";
-import * as ApiKeys from "../config";
 import { MisterPixel } from "../components/StyledText";
 import LottieView from "lottie-react-native";
+import Fetch from "../constants/APIs";
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
 
@@ -16,7 +16,7 @@ export default class SearchScreen extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			text: "",
+			query: "",
 			lat: null,
 			lng: null,
 			city: null,
@@ -56,40 +56,24 @@ export default class SearchScreen extends React.Component {
 			});
 	}
 
-	getCoords() {
-		const apiKey = ApiKeys.API_KEYS.opencage;
-
-		return fetch(
-			`https://api.opencagedata.com/geocode/v1/json?key=${apiKey}&q=${this.state.text}`
-		)
-			.then(response => response.json())
+	getCoords() { 
+		return Fetch.locationCoords(this.state.query)
 			.then(responseJson => {
 				this.setState({
 					lat: responseJson.results[0].geometry.lat,
 					lng: responseJson.results[0].geometry.lng,
-					city: responseJson.results[0].components.city ? responseJson.results[0].components.city : this.titleCase(this.state.text)
+					city: responseJson.results[0].components.city ? responseJson.results[0].components.city : this.titleCase(this.state.query)
 				});
-			})
-			.catch(error => {
-				console.error(error);
 			});
 	}
 
-	getWeather(lat, lng) {
-		const apiKey = ApiKeys.API_KEYS.darkSky;
-
-		return fetch(
-			`https://api.darksky.net/forecast/${apiKey}/${lat},${lng}`
-		)
-			.then(response => response.json())
-			.then(responseJson => {
+	getWeather() {
+		return Fetch.weather(this.state.lat, this.state.lng)
+			.then(weatherData => {
 				this.setState({
-					weatherData: responseJson
+					weatherData: weatherData
 				})
-			})
-			.catch(error => {
-				console.error(error);
-			});;
+			});
 	}
 
 	// utility method
@@ -106,15 +90,15 @@ export default class SearchScreen extends React.Component {
 					<TextInput
 						style={styles.searchInput}
 						placeholder="search for a city"
-						value={this.state.text}
-						onChangeText={text => this.setState({ text })}
+						value={this.state.query}
+						onChangeText={query => this.setState({ query })}
 					/>
 				) : null}
 
 				{!this.state.isFetchingData ? (
-					<TouchableOpacity onPress={this.onPress} disabled={this.state.text ? false : true}>
+					<TouchableOpacity onPress={this.onPress} disabled={this.state.query ? false : true}>
 						<View style={styles.button}>
-							<MisterPixel style={[styles.buttonLabel, !this.state.text ? styles.disabledBtn : null]}>Start</MisterPixel>
+							<MisterPixel style={[styles.buttonLabel, !this.state.query ? styles.disabledBtn : null]}>Start</MisterPixel>
 						</View>
 					</TouchableOpacity>
 				) : null}
