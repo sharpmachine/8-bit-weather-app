@@ -26,7 +26,8 @@ export default class WeatherScreen extends React.Component {
 			city: null,
 			location: null,
 			errorMessage: null,
-			isFetchingData: true
+			isFetchingData: true,
+			wasLocationSearchedFor: false
 		}
 	}
 
@@ -36,53 +37,109 @@ export default class WeatherScreen extends React.Component {
 				errorMessage: 'Oops, this will not work on Sketch in an Android emulator. Try it on your device!',
 			});
 		} else {
-			this.getCurrentLocation();
+			this.getWeather();
 		}
 	}
 
-	getLocationName() {
-		return Fetch.locationName(
-			this.state.location.coords.latitude,
-			this.state.location.coords.longitude
-		).then(responseJson => {
-				this.setState({
-					city: responseJson.results[0].components.city
-				});
-			})
-	}
+	// getCurrentLocation() {
+	// 	return Fetch.currentLocation()
+	// 		.then((location) => {
+	// 			this.setState({ location }, () => {
+	// 				this.getWeather(location.coords.latitude, location.coords.longitude)
+	// 					.then(() => {
+	// 						this.setState({ isFetchingData: false });
+	// 					});
+	// 			});
+	// 	});
+	// };
 
-	getCurrentLocation() {
-		return Fetch.currentLocation()
-			.then((location) => {
-				this.setState({ location }, () => {
-					this.getLocationName();
-					setTimeout(() => {
-						this.getWeather(location.coords.latitude, location.coords.longitude).then(() => {
-							this.setState({ isFetchingData: false })
+	getWeather() {
+		this.setState({isFetchingData: true})
+		this.getLocation()
+		.then(() => {
+			// console.log(this.state.location.coords)
+			return Fetch.weather(
+				this.state.location.coords.latitude, 
+				this.state.location.coords.longitude
+				)
+				.then(weatherData => {
+					this.setState({
+						weatherData: weatherData
+					});
+					// console.log(weatherData)
+				})
+				.then(() => {
+					// get name of city
+					return Fetch.locationName(
+						this.state.location.coords.latitude,
+						this.state.location.coords.longitude
+						)
+						.then(responseJson => {
+							this.setState({
+								city:
+									responseJson.results[0].components.city ?
+										responseJson.results[0].components.city :
+										this.titleCase(this.state.query)
+							});
 						})
-					}, 1000)
+				})
+				.then(() => {
+					this.setState({ isFetchingData: false })
 				});
 		});
-	};
-
-	getWeather(lat, lng) {
-		return Fetch.weather(lat, lng)
-			.then(weatherData => {
-				this.setState({
-					weatherData: weatherData
-				})
-			});
 	}
 
-	getQueriedLocationWeather(weatherData) {
-		const { navigation } = this.props;
 
-		if (!!weatherData.lastState) {
-			this.setState({
-				weatherData: navigation.getParam('weatherData', WeatherData.WEATHER_DATA[0]),
-				city: navigation.getParam('city', "Seattle")
-			})
+	getLocation() {
+		const { navigation } = this.props;
+		const query = navigation.getParam("query", "Seattle");
+		// console.log(this.state.wasLocationSearchedFor)
+		// If user searched for a location
+		if (!!this.state.wasLocationSearchedFor) {
+			// console.log('searched 2')
+			// Get query coords
+			return Fetch.locationCoords(query)
+				.then(location => {
+					this.setState({ location });
+				})
+		} else {
+			return Fetch.currentLocation()
+				.then(location => {
+					this.setState({ location });
+				});
 		}
+	}
+
+	searchQueryMadeCheck(wasLocationSearchedFor) {
+		// console.log(wasLocationSearchedFor)
+		
+		// this.setState({ wasLocationSearchedFor: wasLocationSearchedFor })
+		// console.log(this.state.wasLocationSearchedFor)
+		if (wasLocationSearchedFor) {
+		// 	console.log('searched')
+			console.log(this.state.wasLocationSearchedFor)
+			this.setState({ wasLocationSearchedFor: "shit" });
+			console.log(this.state.wasLocationSearchedFor)
+			this.getWeather();
+		}
+	}
+
+	// getCoords() {
+	// 	return Fetch.locationCoords(this.state.query)
+	// 		.then(responseJson => {
+	// 			this.setState({
+	// 				lat: responseJson.results[0].geometry.lat,
+	// 				lng: responseJson.results[0].geometry.lng,
+	// 				city: responseJson.results[0].components.city ? responseJson.results[0].components.city : this.titleCase(this.state.query)
+	// 			});
+	// 		});
+	// }
+
+	// utility method
+	titleCase(str) {
+		return str.toLowerCase().split(" ").map(word => {
+			return (word.charAt(0).toUpperCase() + word.slice(1));
+		}).join(' ');
 	}
 
 	getGradient() {
@@ -284,9 +341,7 @@ export default class WeatherScreen extends React.Component {
 		]
 
 		return (
-			<View style={{
-				flex: 1
-			}}>
+			<View style={{flex: 1}}>
 				<View style={{
 					flex: 1,
 					alignItems: "center",
@@ -552,9 +607,11 @@ export default class WeatherScreen extends React.Component {
 	render() {
 		return (
 			<View style={{ flex: 1 }}>
+
 				<NavigationEvents
-					onWillFocus={payload => this.getQueriedLocationWeather(weatherData)}
+					onWillFocus={(payload) => this.searchQueryMadeCheck(!!payload.lastState)}
 				/>
+
 				{this.state.isFetchingData ? (
 					<View style={{
 						flex: 1,
@@ -571,35 +628,35 @@ export default class WeatherScreen extends React.Component {
 
 				{!this.state.isFetchingData ? (
 					<View style={{ flex: 1 }}>
-				<StatusBar barStyle={this.getGradient().statusBarStyle} />
-				<SafeAreaView style={{ backgroundColor: this.getGradient().startColor }} />
-					<LinearGradient
-						colors={[
-							this.getGradient().startColor,
-							this.getGradient().endColor
-						]}
-						style={{ flex: 1 }}>
-							<Button onPress={() => this.props.navigation.navigate("Search")} title="Search" />
-						{this.renderKeyDetails()}
-					</LinearGradient>
-				<BottomDrawer
-					containerHeight={580}
-					startUp={false}
-					roundedEdges={true}
-					downDisplay={580 - 120}
-					backgroundColor={"#242424"}
-					shadow={false}>
-					<View 
-						style={{
-							flex: 1,
-							padding: 40
-						}}>
-						{this.renderHourly()}
-						{this.renderCurrentDetails()}
-						{this.renderSunriseSunset()}
-						{this.renderDailyForecast()}
-					</View>
-				</BottomDrawer>
+						<StatusBar barStyle={this.getGradient().statusBarStyle} />
+						<SafeAreaView style={{ backgroundColor: this.getGradient().startColor }} />
+						<LinearGradient
+							colors={[
+								this.getGradient().startColor,
+								this.getGradient().endColor
+							]}
+							style={{ flex: 1 }}>
+								<Button onPress={() => this.props.navigation.navigate("Search")} title="Search" />
+							{this.renderKeyDetails()}
+						</LinearGradient>
+						<BottomDrawer
+							containerHeight={580}
+							startUp={false}
+							roundedEdges={true}
+							downDisplay={580 - 120}
+							backgroundColor={"#242424"}
+							shadow={false}>
+							<View 
+								style={{
+									flex: 1,
+									padding: 40
+								}}>
+								{this.renderHourly()}
+								{this.renderCurrentDetails()}
+								{this.renderSunriseSunset()}
+								{this.renderDailyForecast()}
+							</View>
+						</BottomDrawer>
 					</View>
 				) : null}
 			</View>

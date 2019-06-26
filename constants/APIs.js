@@ -46,7 +46,7 @@ const Fetch = {
       .then(response => response.json())
       .catch(error => {
         console.error(error);
-      });;
+      });
   }
 };
 

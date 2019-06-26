@@ -25,35 +25,51 @@ export default class SearchScreen extends React.Component {
 		};
 	}
 
+	// onPress = () => {
+	// 	// set state when data is being fetched from APIs
+	// 	this.setState({ isFetchingData: true });
+
+	// 	// get coords
+	// 	this.getCoords()
+	// 		.then(() => {
+
+	// 			// Pass coords to dark sky API to fetch weather for queried city
+	// 			this.getWeather(this.state.lat, this.state.lng)
+	// 				.then(() => {
+	// 					// navigate to weather info screen
+	// 					this.props.navigation.navigate("Weather", {
+	// 						weatherData: this.state.weatherData,
+	// 						city: this.state.city,
+	// 						wasNavigatedTo: true
+	// 					});
+	// 					// reset states when navigating completes
+	// 					this.props.navigation.addListener(
+	// 						'didBlur',
+	// 						() => {
+	// 							this.setState({
+	// 								isFetchingData: false,
+	// 								text: ""
+	// 							});
+	// 						}
+	// 					)
+	// 				});
+	// 		});
+	// }
+
 	onPress = () => {
-		// set state when data is being fetched from APIs
-		this.setState({ isFetchingData: true });
-
-		// get coords
-		this.getCoords()
-			.then(() => {
-
-				// Pass coords to dark sky API to fetch weather for queried city
-				this.getWeather(this.state.lat, this.state.lng)
-					.then(() => {
-						// navigate to weather info screen
-						this.props.navigation.navigate("Weather", {
-							weatherData: this.state.weatherData,
-							city: this.state.city,
-							wasNavigatedTo: true
-						});
-						// reset states when navigating completes
-						this.props.navigation.addListener(
-							'didBlur',
-							() => {
-								this.setState({
-									isFetchingData: false,
-									text: ""
-								});
-							}
-						)
-					});
-			});
+		// Navigation to weather screen and pass query
+		this.props.navigation.navigate("Weather", {
+			query: this.state.query,
+		});
+		// reset states when navigating completes
+		this.props.navigation.addListener(
+			'didBlur',
+			() => {
+				this.setState({
+					text: ""
+				});
+			}
+		)
 	}
 
 	getCoords() { 
