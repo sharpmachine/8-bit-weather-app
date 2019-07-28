@@ -396,7 +396,7 @@ export default class WeatherScreen extends React.Component {
 			{
 				title: "Sunrise",
 				time: this.state.weatherData.daily.data[0].sunriseTime,
-				image: require('../assets/icons/sunrise2x.png')
+				image: require('../assets/icons/sunrise.png')
 			},
 			{
 				title: "Sunset",
