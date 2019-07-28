@@ -11,7 +11,7 @@ import { LinearGradient } from "expo";
 import { MisterPixel } from "../components/StyledText";
 import LottieView from "lottie-react-native";
 import * as WeatherData from "../assets/mockData/weatherData";
-import * as Gradients from "../constants/Gradients"
+import * as Gradients from "../constants/Gradients";
 import moment from "moment-timezone";
 import BottomDrawer from 'rn-bottom-drawer';
 
@@ -177,9 +177,9 @@ export default class WeatherScreen extends React.Component {
 			{
 				title: "city_name",
 				display: this.state.city,
-				style: { 
-					fontSize: 24, 
-					marginTop: 60, 
+				style: {
+					fontSize: 24,
+					marginTop: 60,
 					marginBottom: 8
 				}
 			},
@@ -190,21 +190,11 @@ export default class WeatherScreen extends React.Component {
 						.unix(this.state.weatherData.currently.time)
 						.tz(this.state.weatherData.timezone)
 				)
-					.format("h:mma  MMMM D")}, 1988`,
+					.format("h:mma  MMMM D, YYYY")}`,
 				style: {
 					marginBottom: 8
 				}
-			},
-			// {
-			// 	title: "city_current_time",
-			// 	display: moment(
-			// 		moment
-			// 			.unix(this.state.weatherData.currently.time)
-			// 			.tz(this.state.weatherData.timezone)
-			// 	)
-			// 		.format("h:mma"),
-			// 	style: {}
-			// }
+			}
 		]
 
 		const centerDetails = [
@@ -244,7 +234,7 @@ export default class WeatherScreen extends React.Component {
 					{topDetails.map(detail => {
 						return (
 							<MisterPixel
-								key={detail.title} 
+								key={detail.title}
 								style={detail.style}
 							>
 								{detail.display}
@@ -286,10 +276,10 @@ export default class WeatherScreen extends React.Component {
 		const hourlyForecast = this.state.weatherData.hourly.data.slice(0, hoursLeftInDay + 8);
 
 		return (
-			<View style={{flex: 1}}>
-				<View style={{height: 50}}>
-					<ScrollView 
-						horizontal={true} 
+			<View style={{flex: 1, marginBottom: 36}}>
+				<View style={{height: 94}}>
+					<ScrollView
+						horizontal={true}
 						showsHorizontalScrollIndicator={false}>
 					<TouchableOpacity
 						activeOpacity={1}
@@ -301,7 +291,7 @@ export default class WeatherScreen extends React.Component {
 								<View
 									key={index}
 									style={{
-										height: 40,
+										height: 84,
 										marginRight: 16
 									}}>
 									<MisterPixel
@@ -313,10 +303,18 @@ export default class WeatherScreen extends React.Component {
 									</MisterPixel>
 									<MisterPixel
 										style={{
-											textAlign: "center"
+											textAlign: "center",
+											marginBottom: 12
 										}}>
 										{moment(moment.unix(data.time).tz(this.state.weatherData.timezone)).format("ha")}
 									</MisterPixel>
+									<LottieView
+										style={{
+											width: 31
+										}}
+										source={this.getConditionIcon(data.icon)}
+										autoPlay
+										loop />
 								</View>
 							);
 						})}
@@ -357,7 +355,7 @@ export default class WeatherScreen extends React.Component {
 			>
 				{details.map((detail, index) => {
 					return (
-						<View 
+						<View
 							key={index}
 							style={{ height: 40 }}
 						>
@@ -408,8 +406,8 @@ export default class WeatherScreen extends React.Component {
 						}}>
 
 						<Image
-							style={{ 
-								width: 49, 
+							style={{
+								width: 49,
 								height: 30,
 								marginBottom: 16
 							}}
@@ -455,7 +453,7 @@ export default class WeatherScreen extends React.Component {
 									flexDirection: "row",
 									flexGrow: 1
 								}}>
-								<MisterPixel style={{ 
+								<MisterPixel style={{
 									flexGrow: 1,
 									width: 78
 									}}>
@@ -469,7 +467,7 @@ export default class WeatherScreen extends React.Component {
 									alignItems: "center",
 								}}>
 
-								<MisterPixel 
+								<MisterPixel
 									style={{
 										width: 22 + 16,
 										textAlign: "left",
@@ -477,7 +475,7 @@ export default class WeatherScreen extends React.Component {
 								}}>
 									{Math.round(data.temperatureLow)}°
 								</MisterPixel>
-								<MisterPixel 
+								<MisterPixel
 									style={{
 										width: 22 + 16,
 										textAlign: "left",
@@ -513,16 +511,18 @@ export default class WeatherScreen extends React.Component {
 						{this.renderKeyDetails()}
 					</LinearGradient>
 				<BottomDrawer
-					containerHeight={580}
-					startUp={true}
+					containerHeight={700}
+					startUp={false}
 					roundedEdges={true}
-					downDisplay={580 - 120}
+					downDisplay={530}
 					backgroundColor={"#242424"}
 					shadow={false}>
-					<View 
+					<View
 						style={{
 							flex: 1,
-							padding: 40
+							flexDirection: "column",
+							padding: 40,
+							paddingBottom: 80
 						}}>
 						{this.renderHourly()}
 						{this.renderCurrentDetails()}

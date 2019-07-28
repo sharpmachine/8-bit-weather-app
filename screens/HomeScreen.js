@@ -16,7 +16,7 @@ export default class HomeScreen extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			text: "",
+			query: "",
 			lat: null,
 			lng: null,
 			city: null,
@@ -59,14 +59,14 @@ export default class HomeScreen extends React.Component {
 		const apiKey = ApiKeys.API_KEYS.opencage;
 
 		return fetch(
-			`https://api.opencagedata.com/geocode/v1/json?key=${apiKey}&q=${this.state.text}`
+			`https://api.opencagedata.com/geocode/v1/json?key=${apiKey}&q=${this.state.query}`
 		)
 			.then(response => response.json())
 			.then(responseJson => {
 				this.setState({
 					lat: responseJson.results[0].geometry.lat,
 					lng: responseJson.results[0].geometry.lng,
-					city: responseJson.results[0].components.city ? responseJson.results[0].components.city : this.titleCase(this.state.text)
+					city: responseJson.results[0].components.city ? responseJson.results[0].components.city : this.titleCase(this.state.query)
 				});
 			})
 			.catch(error => {
@@ -105,15 +105,15 @@ export default class HomeScreen extends React.Component {
 					<TextInput
 						style={styles.searchInput}
 						placeholder="search for a city"
-						value={this.state.text}
-						onChangeText={text => this.setState({ text })}
+						value={this.state.query}
+						onChangeText={query => this.setState({ query })}
 					/>
 				) : null}
 
 				{!this.state.isFetchingData ? (
-					<TouchableOpacity onPress={this.onPress} disabled={this.state.text ? false : true}>
+					<TouchableOpacity onPress={this.onPress} disabled={this.state.query ? false : true}>
 						<View style={styles.button}>
-							<MisterPixel style={[styles.buttonLabel, !this.state.text ? styles.disabledBtn : null]}>Start</MisterPixel>
+							<MisterPixel style={[styles.buttonLabel, !this.state.query ? styles.disabledBtn : null]}>Start</MisterPixel>
 						</View>
 					</TouchableOpacity>
 				) : null}
