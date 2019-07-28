@@ -153,15 +153,34 @@ export default class WeatherScreen extends React.Component {
 	}
 
 	getConditionIcon(icon) {
-		if (icon == "clear-day" || icon == "clear night") {
+		const conditions = [
+			"clear-day",
+			"clear-night",
+			"rain",
+			"snow",
+			"sleet",
+			"wind",
+			"fog",
+			"cloudy",
+			"partly-cloudy-day",
+			"partly-cloudy-night"
+		]
+
+		if (icon == "clear-day") {
 			return require("../assets/icons/clear-day.json");
+		} else if (icon == "clear-night") {
+			return require("../assets/icons/clear-night.json");
 		} else if (icon == "rain") {
 			return require("../assets/icons/rain.json");
-		} else if (icon == "snow" || icon == "sleet") {
+		} else if (icon == "snow") {
 			return require("../assets/icons/snow.json");
+		} else if (icon == "sleet") {
+			return require("../assets/icons/sleet.json");
 		} else if (icon == "cloudy") {
 			return require("../assets/icons/cloudy.json");
-		} else if (icon == "partly-cloudy-day" || icon == "partly-cloudy-night") {
+		} else if (icon == "partly-cloudy-night") {
+			return require("../assets/icons/partly-cloudy-night.json");
+		} else if (icon == "partly-cloudy-day") {
 			return require("../assets/icons/partly-cloudy-day.json");
 		} else if (icon == "wind") {
 			return require("../assets/icons/wind.json");
@@ -310,7 +329,7 @@ export default class WeatherScreen extends React.Component {
 									</MisterPixel>
 									<LottieView
 										style={{
-											width: 31
+											width: 26
 										}}
 										source={this.getConditionIcon(data.icon)}
 										autoPlay
