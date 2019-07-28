@@ -530,10 +530,10 @@ export default class WeatherScreen extends React.Component {
 						{this.renderKeyDetails()}
 					</LinearGradient>
 				<BottomDrawer
-					containerHeight={700}
+					containerHeight={645}
 					startUp={false}
-					roundedEdges={true}
-					downDisplay={530}
+					roundedEdges={false}
+					downDisplay={490}
 					backgroundColor={"#242424"}
 					shadow={false}>
 					<View
@@ -541,8 +541,16 @@ export default class WeatherScreen extends React.Component {
 							flex: 1,
 							flexDirection: "column",
 							padding: 40,
-							paddingBottom: 80
+							paddingBottom: 60,
 						}}>
+						<View style={{
+							justifyContent: 'center',
+							alignItems: 'center',
+						}}>
+							<Image source={require('../assets/handle.png')} style={{
+								top: -18
+							}} />
+						</View>
 						{this.renderHourly()}
 						{this.renderCurrentDetails()}
 						{this.renderSunriseSunset()}
